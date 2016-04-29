@@ -1,0 +1,53 @@
+%define majorminor  @GST_API_VERSION@
+%define gstreamer   gstreamer1
+
+%define gst_minver   1.0.0
+
+Name: 		%{gstreamer}-interpipe
+Version: 	@VERSION@
+Release: 	@PACKAGE_VERSION_RELEASE@.gst
+Summary: 	GstInterpipe
+
+Group: 		Applications/Multimedia
+License: 	LGPL
+URL:		http://gstreamer.freedesktop.org/
+Vendor:         
+Source:         
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Requires: 	  %{gstreamer} >= %{gst_minver}
+BuildRequires: 	  %{gstreamer}-devel >= %{gst_minver}
+
+BuildRequires:  gcc-c++
+
+%description
+GStreamer is a streaming media framework, based on graphs of filters which
+operate on media data. Applications using this library can do anything
+from real-time sound processing to playing videos, and just about anything
+else media-related.  Its plugin-based architecture means that new data
+types or processing capabilities can be added simply by installing new
+plug-ins.
+
+%prep
+%setup -q -n gst-interpipe-%{version}
+%build
+%configure \
+  --enable-debug \
+  --enable-DEBUG 
+
+make %{?_smp_mflags} CFLAGS+="-Wno-error" CXXFLAGS+="-Wno-error"
+                                                                                
+%install
+rm -rf $RPM_BUILD_ROOT
+
+%makeinstall
+                                                                                
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+
+# non-core plugins without external dependencies
+%{_libdir}/gstreamer-%{majorminor}/libgstinterpipe.so
+
+%changelog
