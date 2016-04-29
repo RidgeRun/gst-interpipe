@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GstInterPipeSink: GstInterpipe 1.0 Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GstInterpipe 1.0 Reference Manual">
+<link rel="up" href="ch01.html" title="GstInterpipe Elements">
+<link rel="prev" href="ch01.html" title="GstInterpipe Elements">
+<link rel="next" href="GstInterPipeSrc.html" title="GstInterPipeSrc">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeSink.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeSink.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_interfaces">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeSink.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeSink.properties" class="shortcut">Properties</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch01.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="GstInterPipeSrc.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="GstInterPipeSink"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="GstInterPipeSink.top_of_page"></a>GstInterPipeSink</span></h2>
+<p>GstInterPipeSink</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="GstInterPipeSink.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody><tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeSink.html#GST-INTER-PIPE-SINK-LISTENERS:CAPS" title="GST_INTER_PIPE_SINK_LISTENERS()">GST_INTER_PIPE_SINK_LISTENERS</a><span class="c_punctuation">()</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table class="informaltable" border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="property_type"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GstInterPipeSink.html#GstInterPipeSink--forward-eos" title="The “forward-eos” property">forward-eos</a></td>
+<td class="property_flags">Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GstInterPipeSink.html#GstInterPipeSink--forward-events" title="The “forward-events” property">forward-events</a></td>
+<td class="property_flags">Write</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="GstInterPipeSink.html#GstInterPipeSink-struct" title="GstInterPipeSink">GstInterPipeSink</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/opt/local/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="/opt/local/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstObject.html">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstElement.html">GstElement</a>
+                <span class="lineart">╰──</span> <a href="/opt/local/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseSink.html">GstBaseSink</a>
+                    <span class="lineart">╰──</span> <a href="/opt/local/share/gtk-doc/html/gst-plugins-base-plugins-1.0/gst-plugins-base-plugins-appsink.html#GstAppSink">GstAppSink</a>
+                        <span class="lineart">╰──</span> GstInterPipeSink
+</pre>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+GstInterPipeSink implements
+ <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstUriHandler.html#GstURIHandler">GstURIHandler</a> and  <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode">GstInterPipeINode</a>.</p>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.description"></a><h2>Description</h2>
+<p>Sink element for interpipeline communication</p>
+<p>&lt;refsect2&gt;
+&lt;title&gt;Example launch line&lt;/title&gt;</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="normal">gst</span><span class="symbol">-</span><span class="normal">launch </span><span class="symbol">\</span>
+<span class="normal">  videotestsrc </span><span class="symbol">!</span><span class="normal"> </span><span class="usertype">interpipesink</span><span class="normal"> name</span><span class="symbol">=</span><span class="normal">test </span><span class="symbol">\</span>
+<span class="normal">  </span><span class="usertype">interpipesrc</span><span class="normal"> listen</span><span class="symbol">-</span><span class="normal">to</span><span class="symbol">=</span><span class="normal">test </span><span class="symbol">!</span><span class="normal"> xvimagesink</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p> Send buffers across two different pipelines
+&lt;/refsect2&gt;</p>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="GST-INTER-PIPE-SINK-LISTENERS:CAPS"></a><h3>GST_INTER_PIPE_SINK_LISTENERS()</h3>
+<pre class="programlisting">#define             GST_INTER_PIPE_SINK_LISTENERS(obj)</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GstInterPipeSink-struct"></a><h3>GstInterPipeSink</h3>
+<pre class="programlisting">typedef struct _GstInterPipeSink GstInterPipeSink;</pre>
+<p>Opaque <a class="link" href="GstInterPipeSink.html" title="GstInterPipeSink"><span class="type">GstInterPipeSink</span></a> structure.</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="GstInterPipeSink--forward-eos"></a><h3>The <code class="literal">“forward-eos”</code> property</h3>
+<pre class="programlisting">  “forward-eos”              <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Forward the EOS event to all the listeners.</p>
+<p>Flags: Write</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstInterPipeSink--forward-events"></a><h3>The <code class="literal">“forward-events”</code> property</h3>
+<pre class="programlisting">  “forward-events”           <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Forward downstream events to all the listeners (except for EOS).</p>
+<p>Flags: Write</p>
+<p>Default value: FALSE</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeSink.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="GstInterPipeSrc.html" title="GstInterPipeSrc"><span class="type">GstInterPipeSrc</span></a></p>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.24</div>
+</body>
+</html>

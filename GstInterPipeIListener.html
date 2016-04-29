@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GstInterPipeIListener: GstInterpipe 1.0 Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GstInterpipe 1.0 Reference Manual">
+<link rel="up" href="ch02.html" title="GstInterpipe Developers Manual">
+<link rel="prev" href="ch02.html" title="GstInterpipe Developers Manual">
+<link rel="next" href="GstInterPipeINode.html" title="GstInterPipeINode">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeIListener.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeIListener.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_prerequisites">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeIListener.prerequisites" class="shortcut">Prerequisites</a></span><span id="nav_implementations">  <span class="dim">|</span> 
+                  <a href="#GstInterPipeIListener.implementations" class="shortcut">Known Implementations</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch02.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="GstInterPipeINode.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="GstInterPipeIListener"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="GstInterPipeIListener.top_of_page"></a>GstInterPipeIListener</span></h2>
+<p>GstInterPipeIListener</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstInterPipeIListener.html#GST-INTER-PIPE-TYPE-ILISTENER:CAPS" title="GST_INTER_PIPE_TYPE_ILISTENER">GST_INTER_PIPE_TYPE_ILISTENER</a></td>
+</tr>
+<tr>
+<td class="function_type">const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-name" title="gst_inter_pipe_ilistener_get_name ()">gst_inter_pipe_ilistener_get_name</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="returnvalue">GstCaps</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-caps" title="gst_inter_pipe_ilistener_get_caps ()">gst_inter_pipe_ilistener_get_caps</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-set-caps" title="gst_inter_pipe_ilistener_set_caps ()">gst_inter_pipe_ilistener_set_caps</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-added" title="gst_inter_pipe_ilistener_node_added ()">gst_inter_pipe_ilistener_node_added</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-removed" title="gst_inter_pipe_ilistener_node_removed ()">gst_inter_pipe_ilistener_node_removed</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-buffer" title="gst_inter_pipe_ilistener_push_buffer ()">gst_inter_pipe_ilistener_push_buffer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-event" title="gst_inter_pipe_ilistener_push_event ()">gst_inter_pipe_ilistener_push_event</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-send-eos" title="gst_inter_pipe_ilistener_send_eos ()">gst_inter_pipe_ilistener_send_eos</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GstInterPipeIListener.html#GstInterPipeIListenerInterface" title="struct GstInterPipeIListenerInterface">GstInterPipeIListenerInterface</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="GstInterPipeIListener.html#GstInterPipeIListener-struct" title="GstInterPipeIListener">GstInterPipeIListener</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/opt/local/share/gtk-doc/html/gobject/GTypeModule.html">GInterface</a>
+    <span class="lineart">╰──</span> GstInterPipeIListener
+</pre>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.prerequisites"></a><h2>Prerequisites</h2>
+<p>
+GstInterPipeIListener requires
+ <a href="/opt/local/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>.</p>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.implementations"></a><h2>Known Implementations</h2>
+<p>
+GstInterPipeIListener is implemented by
+ <a class="link" href="GstInterPipeSrc.html" title="GstInterPipeSrc">GstInterPipeSrc</a>.</p>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.description"></a><h2>Description</h2>
+<p>Interface to decouple specific nodes and listeners from the core.</p>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="GST-INTER-PIPE-TYPE-ILISTENER:CAPS"></a><h3>GST_INTER_PIPE_TYPE_ILISTENER</h3>
+<pre class="programlisting">#define GST_INTER_PIPE_TYPE_ILISTENER (gst_inter_pipe_ilistener_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-get-name"></a><h3>gst_inter_pipe_ilistener_get_name ()</h3>
+<pre class="programlisting">const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_inter_pipe_ilistener_get_name (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>);</pre>
+<p>Return the name associated with the object implementing the interface.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object to query the name from. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.9.3.6"></a><h4>Returns</h4>
+<p> The name of the object implementing the interface. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-get-caps"></a><h3>gst_inter_pipe_ilistener_get_caps ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="returnvalue">GstCaps</span></a> *
+gst_inter_pipe_ilistener_get_caps (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                   <em class="parameter"><code><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *negotiated</code></em>);</pre>
+<p>Return the set of supported caps of the element implementing the interface.
+This set of caps should consider the supported caps of the downstream elements.
+If the caps negotiation has already taken place, this caps should be the ones
+configured in the element and <em class="parameter"><code>negotiated</code></em>
+ should be set to true.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object to query the <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> from. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>negotiated</p></td>
+<td class="parameter_description"><p> Whether or not the listener already has the caps negotiated
+and configured in the element. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/out"><span class="acronym">out</span></a>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.2.9.4.6"></a><h4>Returns</h4>
+<p> The <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> supported by the listener's pipeline. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-set-caps"></a><h3>gst_inter_pipe_ilistener_set_caps ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_set_caps (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                   <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+<p>Set the given <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> in the listener. This caps should be forwarded to 
+downstream elements.</p>
+<p>Return: True if it was possible to set the given caps, False otherwise.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.5.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object to set the <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> to. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p> The <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstCaps.html"><span class="type">GstCaps</span></a> to set in the element. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-node-added"></a><h3>gst_inter_pipe_ilistener_node_added ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_node_added (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                     <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Callback that will be called whenever a new <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> is added. It is responsibility of the 
+listener to decide whether or not it is interested in the newly added <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a>.</p>
+<p>Return: True always.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.6.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object to notify when a new <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> is added. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>node_name</p></td>
+<td class="parameter_description"><p> The name of the newly connected <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-node-removed"></a><h3>gst_inter_pipe_ilistener_node_removed ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_node_removed (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                       <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Callback that will be called whenever a <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> is removed. It is responsibility of the 
+listener to decide whether or not it is interested in the event.</p>
+<p>Return: True always.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.7.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object to notify when a <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> is added. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>node_name</p></td>
+<td class="parameter_description"><p> The name of the <a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> that was removed. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-push-buffer"></a><h3>gst_inter_pipe_ilistener_push_buffer ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_push_buffer (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                      <em class="parameter"><code><a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                      <em class="parameter"><code><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> basetime</code></em>);</pre>
+<p>Push <em class="parameter"><code>buffer</code></em>
+ to the downstream element. If required compensate the timestamp
+using <em class="parameter"><code>basetime</code></em>
+ in order to get an equivalent buffer time.</p>
+<p>Return: True if the buffer was successfully pushed, False otherwise.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.8.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object that should push the <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html"><span class="type">GstBuffer</span></a> downstream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p> The <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html"><span class="type">GstBuffer</span></a> to be pushed downstream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>basetime</p></td>
+<td class="parameter_description"><p>The basetime of the node's pipeline. If required, the listener should
+compensate the buffer's timestamp using the node's base time and its own, in order
+to get an equivalent buffer time.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-push-event"></a><h3>gst_inter_pipe_ilistener_push_event ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_push_event (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>,
+                                     <em class="parameter"><code><a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>,
+                                     <em class="parameter"><code><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> basetime</code></em>);</pre>
+<p>Push <em class="parameter"><code>event</code></em>
+ to the downstream element. If required compensate the timestamp
+using <em class="parameter"><code>basetime</code></em>
+ in order to get an equivalent event time.</p>
+<p>Return: True if the event was successfully pushed, False otherwise.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.9.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object that should push the <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstEvent.html"><span class="type">GstEvent</span></a> downstream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p> The <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstEvent.html"><span class="type">GstEvent</span></a> to be pushed downstream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>basetime</p></td>
+<td class="parameter_description"><p>The basetime of the node's pipeline. If required, the listener should
+compensate the event's timestamp using the node's base time and its own, in order
+to get an equivalent event time.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-ilistener-send-eos"></a><h3>gst_inter_pipe_ilistener_send_eos ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_ilistener_send_eos (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *iface</code></em>);</pre>
+<p>Push an EOS event to the downstream elements. </p>
+<p>Return: True if the event was successfully pushed, False otherwise.</p>
+<div class="refsect3">
+<a name="id-1.3.2.9.10.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>iface</p></td>
+<td class="parameter_description"><p> The object that should push the <a href="/opt/local/share/gtk-doc/html/gstreamer-1.0/GstEvent.html"><span class="type">GstEvent</span></a> downstream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GstInterPipeIListenerInterface"></a><h3>struct GstInterPipeIListenerInterface</h3>
+<pre class="programlisting">struct GstInterPipeIListenerInterface {
+  const gchar * (*get_name) (GstInterPipeIListener *iface);
+  GstCaps * (*get_caps) (GstInterPipeIListener *iface, gboolean *negotiated);
+  gboolean (*set_caps) (GstInterPipeIListener *iface, const GstCaps *caps);
+  gboolean (* node_added) (GstInterPipeIListener *iface, const gchar *node_name);
+  gboolean (* node_removed) (GstInterPipeIListener *iface, const gchar *node_removed);
+  gboolean (* push_buffer) (GstInterPipeIListener *iface, GstBuffer *buffer, guint64 basetime);
+  gboolean (* push_event) (GstInterPipeIListener *iface, GstEvent *event, guint64 basetime);
+  gboolean (* send_eos) (GstInterPipeIListener *iface);
+};
+</pre>
+<p><em class="parameter"><code>get_name</code></em>
+: Return the name of the object implementing the
+  interface.  See <a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-name" title="gst_inter_pipe_ilistener_get_name ()"><span class="type">gst_inter_pipe_ilistener_get_name</span></a>.</p>
+<p><em class="parameter"><code>get_caps</code></em>
+: Return the set of supported caps. The element
+  implementing the interface should consider it's downstream
+  capabilities. Additionally, it should output through the
+  <em class="parameter"><code>negotiated</code></em>
+ variable whether or not caps are already configured in
+  the element. See <a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-caps" title="gst_inter_pipe_ilistener_get_caps ()"><span class="type">gst_inter_pipe_ilistener_get_caps</span></a>.</p>
+<p><em class="parameter"><code>set_caps</code></em>
+: Configure the given caps into the element. This caps
+should be forwarded to downstream elements. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-set-caps" title="gst_inter_pipe_ilistener_set_caps ()"><span class="type">gst_inter_pipe_ilistener_set_caps</span></a>.</p>
+<p><em class="parameter"><code>node_added</code></em>
+: Callback function that will be called whenever a new
+node is connected. It's responsibility of the listener to decide
+whether or not it is interested in the new node. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-added" title="gst_inter_pipe_ilistener_node_added ()"><span class="type">gst_inter_pipe_ilistener_node_added</span></a>.</p>
+<p><em class="parameter"><code>node_removed</code></em>
+: Callback function that will be called whenever a
+node is disconnected. It's responsibility of the listener to decide
+whether or not it is interested in the node removal. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-removed" title="gst_inter_pipe_ilistener_node_removed ()"><span class="type">gst_inter_pipe_ilistener_node_removed</span></a>.</p>
+<p><em class="parameter"><code>push_buffer</code></em>
+: Push the given buffer into the listener's
+pipeline. Furthermore, consider <em class="parameter"><code>basetime</code></em>
+ in order to compensate
+its timestamp if required. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-buffer" title="gst_inter_pipe_ilistener_push_buffer ()"><span class="type">gst_inter_pipe_ilistener_push_buffer</span></a>.</p>
+<p><em class="parameter"><code>push_event</code></em>
+: Push the given event into the listener's
+pipeline. Furthermore, consider <em class="parameter"><code>basetime</code></em>
+ in order to compensate
+its timestamp if required. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-event" title="gst_inter_pipe_ilistener_push_event ()"><span class="type">gst_inter_pipe_ilistener_push_event</span></a>.</p>
+<p><em class="parameter"><code>send_eos</code></em>
+: Send an EOS event into the listener's pipeline. See
+<a class="link" href="GstInterPipeIListener.html#gst-inter-pipe-ilistener-send-eos" title="gst_inter_pipe_ilistener_send_eos ()"><span class="type">gst_inter_pipe_ilistener_send_eos</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstInterPipeIListener-struct"></a><h3>GstInterPipeIListener</h3>
+<pre class="programlisting">typedef struct _GstInterPipeIListener GstInterPipeIListener;</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstInterPipeIListener.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a></p>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.24</div>
+</body>
+</html>

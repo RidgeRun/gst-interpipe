@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<book xmlns="http://www.devhelp.net/book" title="GstInterpipe 1.0 Reference Manual" link="index.html" author="" name="gst-interpipe-1.0" version="2" language="c">
+  <chapters>
+    <sub name="GstInterpipe Elements" link="ch01.html">
+      <sub name="GstInterPipeSink" link="GstInterPipeSink.html"/>
+      <sub name="GstInterPipeSrc" link="GstInterPipeSrc.html"/>
+    </sub>
+    <sub name="GstInterpipe Developers Manual" link="ch02.html">
+      <sub name="GstInterPipeIListener" link="GstInterPipeIListener.html"/>
+      <sub name="GstInterPipeINode" link="GstInterPipeINode.html"/>
+      <sub name="GstInterPipe" link="gst-interpipe-GstInterPipe.html"/>
+    </sub>
+    <sub name="Object Hierarchy" link="object-tree.html"/>
+    <sub name="API Index" link="api-index-full.html"/>
+    <sub name="Index of deprecated API" link="deprecated-api-index.html"/>
+  </chapters>
+  <functions>
+    <keyword type="macro" name="GST_INTER_PIPE_SINK_LISTENERS()" link="GstInterPipeSink.html#GST-INTER-PIPE-SINK-LISTENERS:CAPS"/>
+    <keyword type="struct" name="GstInterPipeSink" link="GstInterPipeSink.html#GstInterPipeSink-struct"/>
+    <keyword type="property" name="The “forward-eos” property" link="GstInterPipeSink.html#GstInterPipeSink--forward-eos"/>
+    <keyword type="property" name="The “forward-events” property" link="GstInterPipeSink.html#GstInterPipeSink--forward-events"/>
+    <keyword type="struct" name="GstInterPipeSrc" link="GstInterPipeSrc.html#GstInterPipeSrc-struct"/>
+    <keyword type="property" name="The “accept-eos-event” property" link="GstInterPipeSrc.html#GstInterPipeSrc--accept-eos-event"/>
+    <keyword type="property" name="The “accept-events” property" link="GstInterPipeSrc.html#GstInterPipeSrc--accept-events"/>
+    <keyword type="property" name="The “allow-renegotiation” property" link="GstInterPipeSrc.html#GstInterPipeSrc--allow-renegotiation"/>
+    <keyword type="property" name="The “block-switch” property" link="GstInterPipeSrc.html#GstInterPipeSrc--block-switch"/>
+    <keyword type="property" name="The “enable-sync” property" link="GstInterPipeSrc.html#GstInterPipeSrc--enable-sync"/>
+    <keyword type="property" name="The “listen-to” property" link="GstInterPipeSrc.html#GstInterPipeSrc--listen-to"/>
+    <keyword type="macro" name="GST_INTER_PIPE_TYPE_ILISTENER" link="GstInterPipeIListener.html#GST-INTER-PIPE-TYPE-ILISTENER:CAPS"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_get_name ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-name"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_get_caps ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-get-caps"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_set_caps ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-set-caps"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_node_added ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-added"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_node_removed ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-node-removed"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_push_buffer ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-buffer"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_push_event ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-push-event"/>
+    <keyword type="function" name="gst_inter_pipe_ilistener_send_eos ()" link="GstInterPipeIListener.html#gst-inter-pipe-ilistener-send-eos"/>
+    <keyword type="struct" name="struct GstInterPipeIListenerInterface" link="GstInterPipeIListener.html#GstInterPipeIListenerInterface"/>
+    <keyword type="struct" name="GstInterPipeIListener" link="GstInterPipeIListener.html#GstInterPipeIListener-struct"/>
+    <keyword type="macro" name="GST_INTER_PIPE_TYPE_INODE" link="GstInterPipeINode.html#GST-INTER-PIPE-TYPE-INODE:CAPS"/>
+    <keyword type="function" name="gst_inter_pipe_inode_add_listener ()" link="GstInterPipeINode.html#gst-inter-pipe-inode-add-listener"/>
+    <keyword type="function" name="gst_inter_pipe_inode_remove_listener ()" link="GstInterPipeINode.html#gst-inter-pipe-inode-remove-listener"/>
+    <keyword type="function" name="gst_inter_pipe_inode_receive_event ()" link="GstInterPipeINode.html#gst-inter-pipe-inode-receive-event"/>
+    <keyword type="struct" name="struct GstInterPipeINodeInterface" link="GstInterPipeINode.html#GstInterPipeINodeInterface"/>
+    <keyword type="struct" name="GstInterPipeINode" link="GstInterPipeINode.html#GstInterPipeINode-struct"/>
+    <keyword type="function" name="gst_inter_pipe_get_node ()" link="gst-interpipe-GstInterPipe.html#gst-inter-pipe-get-node"/>
+    <keyword type="function" name="gst_inter_pipe_listen_node ()" link="gst-interpipe-GstInterPipe.html#gst-inter-pipe-listen-node"/>
+    <keyword type="function" name="gst_inter_pipe_leave_node ()" link="gst-interpipe-GstInterPipe.html#gst-inter-pipe-leave-node"/>
+    <keyword type="function" name="gst_inter_pipe_add_node ()" link="gst-interpipe-GstInterPipe.html#gst-inter-pipe-add-node"/>
+    <keyword type="function" name="gst_inter_pipe_remove_node ()" link="gst-interpipe-GstInterPipe.html#gst-inter-pipe-remove-node"/>
+  </functions>
+</book>

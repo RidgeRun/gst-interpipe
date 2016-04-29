@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GstInterPipe: GstInterpipe 1.0 Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GstInterpipe 1.0 Reference Manual">
+<link rel="up" href="ch02.html" title="GstInterpipe Developers Manual">
+<link rel="prev" href="GstInterPipeINode.html" title="GstInterPipeINode">
+<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gst-interpipe-GstInterPipe.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="GstInterPipeINode.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="gst-interpipe-GstInterPipe"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="gst-interpipe-GstInterPipe.top_of_page"></a>GstInterPipe</span></h2>
+<p>GstInterPipe</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="gst-interpipe-GstInterPipe.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="returnvalue">GstInterPipeINode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-interpipe-GstInterPipe.html#gst-inter-pipe-get-node" title="gst_inter_pipe_get_node ()">gst_inter_pipe_get_node</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-interpipe-GstInterPipe.html#gst-inter-pipe-listen-node" title="gst_inter_pipe_listen_node ()">gst_inter_pipe_listen_node</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-interpipe-GstInterPipe.html#gst-inter-pipe-leave-node" title="gst_inter_pipe_leave_node ()">gst_inter_pipe_leave_node</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-interpipe-GstInterPipe.html#gst-inter-pipe-add-node" title="gst_inter_pipe_add_node ()">gst_inter_pipe_add_node</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-interpipe-GstInterPipe.html#gst-inter-pipe-remove-node" title="gst_inter_pipe_remove_node ()">gst_inter_pipe_remove_node</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="gst-interpipe-GstInterPipe.description"></a><h2>Description</h2>
+<p>GstInterpipe Core handling inter pipeline communication.</p>
+</div>
+<div class="refsect1">
+<a name="gst-interpipe-GstInterPipe.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="gst-inter-pipe-get-node"></a><h3>gst_inter_pipe_get_node ()</h3>
+<pre class="programlisting"><a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="returnvalue">GstInterPipeINode</span></a> *
+gst_inter_pipe_get_node (<em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Search for <em class="parameter"><code>node_name</code></em>
+ in the list of existing nodes and return the
+appropriate GstInterPipeINode. If the node was not found
+null will be returned accordingly.</p>
+<div class="refsect3">
+<a name="id-1.3.4.5.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>node_name</p></td>
+<td class="parameter_description"><p> the name of the node to return. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.4.5.2.6"></a><h4>Returns</h4>
+<p> The respective GstInterPipeINode or null. </p>
+<p><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][<a href="http://foldoc.org/nullable"><span class="acronym">nullable</span></a>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-listen-node"></a><h3>gst_inter_pipe_listen_node ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_listen_node (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *listener</code></em>,
+                            <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Register a listener to listen to an specific node. If the node 
+is not yet available, the listener will be notified later.</p>
+<div class="refsect3">
+<a name="id-1.3.4.5.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>listener</p></td>
+<td class="parameter_description"><p> The listener object to attach to the node. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>node_name</p></td>
+<td class="parameter_description"><p> The name of the node to attach to. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.4.5.3.6"></a><h4>Returns</h4>
+<p> TRUE if the listener was registered correctly, FALSE otherwise. </p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-leave-node"></a><h3>gst_inter_pipe_leave_node ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_leave_node (<em class="parameter"><code><a class="link" href="GstInterPipeIListener.html" title="GstInterPipeIListener"><span class="type">GstInterPipeIListener</span></a> *listener</code></em>);</pre>
+<p>Disconnect a listener from its respective node.</p>
+<div class="refsect3">
+<a name="id-1.3.4.5.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>listener</p></td>
+<td class="parameter_description"><p> The listener to detach. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.4.5.4.6"></a><h4>Returns</h4>
+<p> TRUE if the listener was detached correclty, FALSE otherwise</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-add-node"></a><h3>gst_inter_pipe_add_node ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_add_node (<em class="parameter"><code><a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> *node</code></em>,
+                         <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Add a new node to the available nodes list</p>
+<div class="refsect3">
+<a name="id-1.3.4.5.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>node</p></td>
+<td class="parameter_description"><p> The node object to register. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20full"><span class="acronym">transfer full</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.4.5.5.6"></a><h4>Returns</h4>
+<p> TRUE if the node was added succesfully, FALSE otherwise. </p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-inter-pipe-remove-node"></a><h3>gst_inter_pipe_remove_node ()</h3>
+<pre class="programlisting"><a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_inter_pipe_remove_node (<em class="parameter"><code><a class="link" href="GstInterPipeINode.html" title="GstInterPipeINode"><span class="type">GstInterPipeINode</span></a> *node</code></em>,
+                            <em class="parameter"><code>const <a href="/opt/local/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *node_name</code></em>);</pre>
+<p>Remove a node from the nodes list.</p>
+<div class="refsect3">
+<a name="id-1.3.4.5.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>node</p></td>
+<td class="parameter_description"><p> The node object to be removed. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<a href="http://foldoc.org/transfer%20none"><span class="acronym">transfer none</span></a>][not nullable]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.4.5.6.6"></a><h4>Returns</h4>
+<p> TRUE if the node was removed succesfully, FALSE otherwise. </p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="gst-interpipe-GstInterPipe.other_details"></a><h2>Types and Values</h2>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.24</div>
+</body>
+</html>
