@@ -533,7 +533,6 @@ gst_inter_pipe_sink_forward_event (gpointer key, gpointer data,
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_EOS:
     case GST_EVENT_CAPS:
-    case GST_EVENT_SEGMENT:
       /*We manage the event with other functions */
       break;
     default:
