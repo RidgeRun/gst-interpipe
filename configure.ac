@@ -6,7 +6,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/pre
-AC_INIT([GstInterpipe],[1.0.0.1],
+AC_INIT([GstInterpipe],[1.0.1],
 	[http://www.github.com/RidgeRun/gst-interpipe-1.0],
 	[gst-interpipe],
 	[http://developer.ridgerun.com/wiki/index.php?title=GstInterpipe])
@@ -284,7 +284,7 @@ dnl LDFLAGS really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
 GST_ALL_LDFLAGS="-no-undefined"
 if test "x${enable_Bsymbolic}" = "xyes"; then
-  GST_ALL_LDFLAGS="$GST_ALL_LDFLAGS -Wl,-Bsymbolic-functions" 
+  GST_ALL_LDFLAGS="$GST_ALL_LDFLAGS -Wl,-Bsymbolic-functions"
 fi
 AC_SUBST(GST_ALL_LDFLAGS)
 
@@ -317,4 +317,3 @@ docs/plugins/gst-interpipe-docs.xml
 )
 
 AC_OUTPUT
-

@@ -32,6 +32,16 @@ GstInterpipe is a plug-in with two elements which allow the communication betwee
 
 <release>
   <Version>
+  <revision>1.0.1</revision>
+   <branch>master</branch>
+   <name></name>
+   <created>2017-02-14</created>
+   <file-release rdf:resource="" />
+  </Version>
+</release>
+
+<release>
+  <Version>
    <revision>1.0.0.1</revision>
    <branch>master</branch>
    <name></name>
@@ -69,7 +79,7 @@ GstInterpipe is a plug-in with two elements which allow the communication betwee
    <file-release rdf:resource="" />
   </Version>
  </release>
- 
+
 <release>
   <Version>
    <revision>0.4.2</revision>
@@ -109,7 +119,7 @@ GstInterpipe is a plug-in with two elements which allow the communication betwee
    <file-release rdf:resource="" />
   </Version>
  </release>
- 
+
  <release>
   <Version>
    <revision>0.2.0</revision>
@@ -136,21 +146,21 @@ GstInterpipe is a plug-in with two elements which allow the communication betwee
      <foaf:mbox_sha1sum></foaf:mbox_sha1sum>
   </foaf:Person>
  </maintainer>
- 
+
  <maintainer>
   <foaf:Person>
      <foaf:name>Marco Madrigal</foaf:name>
      <foaf:mbox_sha1sum></foaf:mbox_sha1sum>
   </foaf:Person>
  </maintainer>
- 
+
  <maintainer>
   <foaf:Person>
      <foaf:name>Carlos Rodriguez</foaf:name>
      <foaf:mbox_sha1sum></foaf:mbox_sha1sum>
   </foaf:Person>
  </maintainer>
- 
+
  <maintainer>
   <foaf:Person>
      <foaf:name>Erick Arroyo</foaf:name>
