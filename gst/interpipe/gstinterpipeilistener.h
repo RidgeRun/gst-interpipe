@@ -30,16 +30,24 @@
 G_BEGIN_DECLS
 
 #define GST_INTER_PIPE_TYPE_ILISTENER (gst_inter_pipe_ilistener_get_type())
-G_DECLARE_INTERFACE(GstInterPipeIListener, gst_inter_pipe_ilistener, GST_INTER_PIPE, ILISTENER, GObject)
+#define GST_INTER_PIPE_ILISTENER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+    GST_INTER_PIPE_TYPE_ILISTENER, GstInterPipeIListener))
+#define GST_INTER_PIPE_IS_ILISTENER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
+    GST_INTER_PIPE_TYPE_ILISTENER))
+#define GST_INTER_PIPE_ILISTENER_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), \
+    GST_INTER_PIPE_TYPE_ILISTENER, GstInterPipeIListenerInterface))
+
+typedef struct _GstInterPipeIListener GstInterPipeIListener;    /* dummy object */
+typedef struct _GstInterPipeIListenerInterface GstInterPipeIListenerInterface;
 
 /**
- * GstInterPipeIListenerInterface: 
- * Interface that potential listeners should implement to integrate 
+ * GstInterPipeIListenerInterface:
+ * Interface that potential listeners should implement to integrate
  * to the GstInterPipe core.
  *
  * @get_name: Return the name of the object implementing the
  *   interface.  See #gst_inter_pipe_ilistener_get_name.
- * 
+ *
  * @get_caps: Return the set of supported caps. The element
  *   implementing the interface should consider it's downstream
  *   capabilities. Additionally, it should output through the
@@ -94,7 +102,7 @@ struct _GstInterPipeIListenerInterface
  * @iface: (transfer none)(not nullable): The object to query the name from
  *
  * Return the name associated with the object implementing the interface.
- * 
+ *
  * Returns: (transfer none): The name of the object implementing the interface.
  */
 const gchar * gst_inter_pipe_ilistener_get_name (GstInterPipeIListener *iface);
@@ -109,7 +117,7 @@ const gchar * gst_inter_pipe_ilistener_get_name (GstInterPipeIListener *iface);
  * This set of caps should consider the supported caps of the downstream elements.
  * If the caps negotiation has already taken place, this caps should be the ones
  * configured in the element and @negotiated should be set to true.
- * 
+ *
  * Returns: (transfer full): The #GstCaps supported by the listener's pipeline.
  */
 GstCaps * gst_inter_pipe_ilistener_get_caps (GstInterPipeIListener *iface, gboolean *negotiated);
@@ -119,7 +127,7 @@ GstCaps * gst_inter_pipe_ilistener_get_caps (GstInterPipeIListener *iface, gbool
  * @iface: (transfer none)(not nullable): The object to set the #GstCaps to.
  * @caps: (transfer none)(not nullable): The #GstCaps to set in the element.
  *
- * Set the given #GstCaps in the listener. This caps should be forwarded to 
+ * Set the given #GstCaps in the listener. This caps should be forwarded to
  * downstream elements.
  *
  * Return: True if it was possible to set the given caps, False otherwise.
@@ -132,9 +140,9 @@ gboolean gst_inter_pipe_ilistener_set_caps (GstInterPipeIListener *iface,
  * @iface: (transfer none)(not nullable): The object to notify when a new #GstInterPipeINode is added.
  * @node_name: (transfer none)(not nullable): The name of the newly connected #GstInterPipeINode.
  *
- * Callback that will be called whenever a new #GstInterPipeINode is added. It is responsibility of the 
+ * Callback that will be called whenever a new #GstInterPipeINode is added. It is responsibility of the
  * listener to decide whether or not it is interested in the newly added #GstInterPipeINode.
- * 
+ *
  * Return: True always.
  */
 gboolean gst_inter_pipe_ilistener_node_added (GstInterPipeIListener *iface,
@@ -145,9 +153,9 @@ gboolean gst_inter_pipe_ilistener_node_added (GstInterPipeIListener *iface,
  * @iface: (transfer none)(not nullable): The object to notify when a #GstInterPipeINode is added.
  * @node_name: (transfer none)(not nullable): The name of the #GstInterPipeINode that was removed.
  *
- * Callback that will be called whenever a #GstInterPipeINode is removed. It is responsibility of the 
+ * Callback that will be called whenever a #GstInterPipeINode is removed. It is responsibility of the
  * listener to decide whether or not it is interested in the event.
- * 
+ *
  * Return: True always.
  */
 gboolean gst_inter_pipe_ilistener_node_removed (GstInterPipeIListener *iface,
@@ -158,7 +166,7 @@ gboolean gst_inter_pipe_ilistener_node_removed (GstInterPipeIListener *iface,
  * @iface: (transfer none)(not nullable): The object that should push the #GstBuffer downstream.
  * @buffer: (transfer full)(not nullable): The #GstBuffer to be pushed downstream.
  * @basetime: The basetime of the node's pipeline. If required, the listener should
- * compensate the buffer's timestamp using the node's base time and its own, in order 
+ * compensate the buffer's timestamp using the node's base time and its own, in order
  * to get an equivalent buffer time.
  *
  * Push @buffer to the downstream element. If required compensate the timestamp
@@ -174,7 +182,7 @@ gboolean gst_inter_pipe_ilistener_push_buffer (GstInterPipeIListener *iface,
  * @iface: (transfer none)(not nullable): The object that should push the #GstEvent downstream.
  * @event: (transfer full)(not nullable): The #GstEvent to be pushed downstream.
  * @basetime: The basetime of the node's pipeline. If required, the listener should
- * compensate the event's timestamp using the node's base time and its own, in order 
+ * compensate the event's timestamp using the node's base time and its own, in order
  * to get an equivalent event time.
  *
  * Push @event to the downstream element. If required compensate the timestamp
@@ -189,11 +197,13 @@ gboolean gst_inter_pipe_ilistener_push_event (GstInterPipeIListener *iface,
  * gst_inter_pipe_ilistener_send_eos:
  * @iface: (transfer none)(not nullable): The object that should push the #GstEvent downstream.
  *
- * Push an EOS event to the downstream elements. 
+ * Push an EOS event to the downstream elements.
  *
  * Return: True if the event was successfully pushed, False otherwise.
  */
 gboolean gst_inter_pipe_ilistener_send_eos (GstInterPipeIListener *iface);
+
+GType gst_inter_pipe_ilistener_get_type (void);
 
 G_END_DECLS
 

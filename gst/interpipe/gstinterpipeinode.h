@@ -26,16 +26,24 @@
 #define __GST_INTER_PIPE_INODE_H__
 
 #include <gst/gst.h>
-#include "gstinterpipeilistener.h" 
+#include "gstinterpipeilistener.h"
 
 G_BEGIN_DECLS
 
 #define GST_INTER_PIPE_TYPE_INODE (gst_inter_pipe_inode_get_type())
-G_DECLARE_INTERFACE(GstInterPipeINode, gst_inter_pipe_inode, GST_INTER_PIPE, INODE, GObject)
+#define GST_INTER_PIPE_INODE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+    GST_INTER_PIPE_TYPE_INODE, GstInterPipeINode))
+#define GST_INTER_PIPE_IS_INODE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
+    GST_INTER_PIPE_TYPE_INODE))
+#define GST_INTER_PIPE_INODE_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), \
+    GST_INTER_PIPE_TYPE_INODE, GstInterPipeINodeInterface))
+
+typedef struct _GstInterPipeINode GstInterPipeINode;    /* dummy object */
+typedef struct _GstInterPipeINodeInterface GstInterPipeINodeInterface;
 
 /**
  * GstInterPipeINodeInterface:
- * Interface that potential node should implement to integrate 
+ * Interface that potential node should implement to integrate
  * to the GstInterPipe core.
  *
  * @add_listener: Add the #GstInterPipeIListener given through
@@ -75,7 +83,7 @@ gboolean gst_inter_pipe_inode_add_listener (GstInterPipeINode *iface, GstInterPi
  * @iface: (transfer none)(not nullable): The object implementing the interface.
  * @listener: (transfer none)(not nullable): The listener to be removed from the internal list.
  *
- * Look for @listener in the internal storage and remove it. 
+ * Look for @listener in the internal storage and remove it.
  *
  * Returns: True if the listener was found and successfully removed, False otherwise.
  */
@@ -90,12 +98,13 @@ gboolean gst_inter_pipe_inode_remove_listener (GstInterPipeINode *iface, GstInte
  * upstream and send it. If multiple listeners are connected to the
  * node, it is recommended that the event is not pushed upstream,
  * since it may affect the node's state for the other
- * listeners. 
+ * listeners.
  *
  * Returns: True if the node is able to receive the event, False otherwise.
  */
 gboolean gst_inter_pipe_inode_receive_event (GstInterPipeINode *iface, GstEvent *event);
 
+GType gst_inter_pipe_inode_get_type (void);
 
 G_END_DECLS
 
