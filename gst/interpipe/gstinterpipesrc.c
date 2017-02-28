@@ -89,6 +89,8 @@ static gboolean gst_inter_pipe_src_push_event (GstInterPipeIListener * iface,
 static gboolean gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface);
 static gboolean gst_inter_pipe_src_listen_node (GstInterPipeSrc * src,
     const gchar * node_name);
+static gboolean gst_inter_pipe_src_start (GstBaseSrc * base);
+static gboolean gst_inter_pipe_src_stop (GstBaseSrc * base);
 static gboolean gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event);
 static void gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface *
     iface);
@@ -99,6 +101,9 @@ struct _GstInterPipeSrc
 
   /* Name of the node to listen to */
   gchar *listen_to;
+
+  /* Currently started and listening */
+  gboolean listening;
 
   /* Pending serial events queue */
   GQueue *pending_serial_events;
@@ -187,6 +192,8 @@ gst_inter_pipe_src_class_init (GstInterPipeSrcClass * klass)
           "Accept the EOS event received from the interpipesink only if it "
           "is set to true", TRUE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
+  basesrc_class->start = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_start);
+  basesrc_class->stop = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_stop);
   basesrc_class->event = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_event);
   basesrc_class->create = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_create);
 }
@@ -197,6 +204,7 @@ gst_inter_pipe_src_init (GstInterPipeSrc * src)
   gst_app_src_set_emit_signals (GST_APP_SRC (src), FALSE);
 
   src->listen_to = NULL;
+  src->listening = FALSE;
   src->pending_serial_events = g_queue_new ();
   src->block_switch = FALSE;
   src->allow_renegotiation = TRUE;
@@ -223,18 +231,34 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
     case PROP_LISTEN_TO:
       node_name = g_strdup (g_value_get_string (value));
       if (node_name != NULL) {
-        if (!gst_inter_pipe_src_listen_node (src, node_name)) {
-          GST_ERROR_OBJECT (src, "Could not listen to node %s", node_name);
+        if (GST_BASE_SRC_IS_STARTED (GST_BASE_SRC (src))) {
+          /* valid node_name, BaseSrc started */
+          if (!gst_inter_pipe_src_listen_node (src, node_name)) {
+            GST_ERROR_OBJECT (src, "Could not listen to node %s", node_name);
+          } else {
+            src->listen_to = node_name;
+            src->listening = TRUE;
+            GST_INFO_OBJECT (src, "Listening to node %s", node_name);
+          }
         } else {
+          /* valid node_name, not started */
+          g_free (src->listen_to);
           src->listen_to = node_name;
-          GST_INFO_OBJECT (src, "Listening to node %s", node_name);
         }
       } else {
-        if (!gst_inter_pipe_leave_node (listener))
-          GST_WARNING_OBJECT (src, "Unable to remove listener from node %s",
-              src->listen_to);
-        g_free (src->listen_to);
-        src->listen_to = NULL;
+        if (src->listening) {
+          /* NULL node name, currently listening */
+          if (!gst_inter_pipe_leave_node (listener))
+            GST_WARNING_OBJECT (src, "Unable to remove listener from node %s",
+                src->listen_to);
+          g_free (src->listen_to);
+          src->listen_to = NULL;
+          src->listening = FALSE;
+        } else {
+          /* NULL node name, not listening/started */
+          g_free (src->listen_to);
+          src->listen_to = NULL;
+        }
       }
       break;
     case PROP_BLOCK_SWITCH:
@@ -297,31 +321,60 @@ static void
 gst_inter_pipe_src_finalize (GObject * object)
 {
   GstInterPipeSrc *src;
-  GstInterPipeIListener *listener;
 
   src = GST_INTER_PIPE_SRC (object);
-  listener = GST_INTER_PIPE_ILISTENER (src);
-
-  if (!src->listen_to)
-    goto exit;
-
-  GST_INFO_OBJECT (src, "Removing listener from node %s", src->listen_to);
-  if (src->listen_to) {
-    gst_inter_pipe_leave_node (listener);
-    g_free (src->listen_to);
-    src->listen_to = NULL;
-  }
 
   /* Free pending serial events queue */
   g_queue_free_full (src->pending_serial_events,
       (GDestroyNotify) gst_event_unref);
 
-exit:
   /* Chain up to the parent class */
   G_OBJECT_CLASS (gst_inter_pipe_src_parent_class)->finalize (object);
 }
 
 /* GstBaseSrc Implementation*/
+static gboolean
+gst_inter_pipe_src_start (GstBaseSrc * base)
+{
+  GstInterPipeSrc *src;
+
+  src = GST_INTER_PIPE_SRC (base);
+
+  if (src->listen_to) {
+    if (!gst_inter_pipe_src_listen_node (src, src->listen_to)) {
+      GST_ERROR_OBJECT (src, "Could not listen to node %s", src->listen_to);
+      return FALSE;
+    } else {
+      GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
+      src->listening = TRUE;
+      return TRUE;
+    }
+  } else {
+    /* it's valid to be started but not listening (yet) */
+    return TRUE;
+  }
+}
+
+static gboolean
+gst_inter_pipe_src_stop (GstBaseSrc * base)
+{
+  GstInterPipeSrc *src;
+  GstInterPipeIListener *listener;
+
+  src = GST_INTER_PIPE_SRC (base);
+  listener = GST_INTER_PIPE_ILISTENER (src);
+
+  if (src->listening) {
+    GST_INFO_OBJECT (src, "Removing listener from node %s", src->listen_to);
+    gst_inter_pipe_leave_node (listener);
+    g_free (src->listen_to);
+    src->listen_to = NULL;
+    src->listening = FALSE;
+  }
+
+  return TRUE;
+}
+
 static gboolean
 gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
 {
