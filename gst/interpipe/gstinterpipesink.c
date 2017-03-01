@@ -275,6 +275,10 @@ gst_inter_pipe_sink_finalize (GObject * object)
     g_free (sink->node_name);
   }
 
+  if (sink->caps) {
+    gst_caps_unref (sink->caps);
+  }
+
   if (sink->caps_negotiated) {
     gst_caps_unref (sink->caps_negotiated);
   }
