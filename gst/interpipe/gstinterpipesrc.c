@@ -361,6 +361,12 @@ gst_inter_pipe_src_create (GstBaseSrc * base, guint64 offset, guint size,
       GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class)->create (base,
       offset, size, buf);
 
+  if (ret != GST_FLOW_OK) {
+    GST_LOG_OBJECT (src, "parent create() returned %s",
+        gst_flow_get_name (ret));
+    return ret;
+  }
+
   GST_LOG_OBJECT (src,
       "Dequeue buffer %p with timestamp (PTS) %" GST_TIME_FORMAT, *buf,
       GST_TIME_ARGS (GST_BUFFER_PTS (*buf)));
