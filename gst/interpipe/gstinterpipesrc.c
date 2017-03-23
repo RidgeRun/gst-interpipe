@@ -576,8 +576,10 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
 
   GST_LOG_OBJECT (src, "Incoming buffer: %p", buffer);
 
-  if (GST_STATE (GST_ELEMENT (appsrc)) < GST_STATE_PAUSED)
+  if (GST_STATE (GST_ELEMENT (appsrc)) < GST_STATE_PAUSED) {
+    gst_buffer_unref (buffer);
     goto out;
+  }
 
   if (src->enable_sync) {
     guint64 difftime;
