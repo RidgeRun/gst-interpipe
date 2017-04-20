@@ -367,8 +367,6 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
   if (src->listening) {
     GST_INFO_OBJECT (src, "Removing listener from node %s", src->listen_to);
     gst_inter_pipe_leave_node (listener);
-    g_free (src->listen_to);
-    src->listen_to = NULL;
     src->listening = FALSE;
   }
 
