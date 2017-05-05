@@ -593,6 +593,11 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
     GST_LOG_OBJECT (src, "Node Base Time: %" GST_TIME_FORMAT,
         GST_TIME_ARGS (basetime));
 
+    if (0 == srcbasetime) {
+      gst_buffer_unref (buffer);
+      return TRUE;
+    }
+
     if (GST_STATE (src) == GST_STATE_PLAYING) {
       if (srcbasetime > basetime) {
         difftime = srcbasetime - basetime;
