@@ -56,10 +56,8 @@ GST_START_TEST (interpipe_node_name_removed)
   asink = gst_bin_get_by_name (GST_BIN (src), "asink");
 
   /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
 
   /* Creating two buffers */
   buffer = gst_buffer_new ();
@@ -75,8 +73,8 @@ GST_START_TEST (interpipe_node_name_removed)
   gst_sample_unref (outsample);
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src), GST_STATE_CHANGE_READY_TO_NULL);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
 
   /* Cleanup */
   g_object_unref (asrc);
