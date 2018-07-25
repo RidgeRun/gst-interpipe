@@ -24,7 +24,6 @@
 
 #define G_MINSSIZE G_MINLONG
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -90,8 +89,6 @@ GST_START_TEST (interpipe_in_bounds_events)
   gst_element_set_state (pipelinesrc, GST_STATE_PLAYING);
   gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
 
-  sleep (2);
-
   /* Creating buffers */
 
   clock = gst_element_get_clock (intersrc);
@@ -112,7 +109,6 @@ GST_START_TEST (interpipe_in_bounds_events)
 
 
   /* Send Flush Stop event */
-  sleep (3);
 
   gst_pad_push_event (interpad,
       gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, NULL));
@@ -123,8 +119,6 @@ GST_START_TEST (interpipe_in_bounds_events)
   GST_BUFFER_PTS (buf4) =
       gst_clock_get_time (clock) - gst_element_get_base_time (intersrc);
   gst_app_src_push_buffer (GST_APP_SRC (appsrc), buf4);
-
-  sleep (5);
 
   /* Stop pipelines */
   gst_element_set_state (pipelinesrc, GST_STATE_NULL);
