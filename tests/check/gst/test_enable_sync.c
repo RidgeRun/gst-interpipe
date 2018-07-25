@@ -21,7 +21,6 @@
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -56,44 +55,27 @@ GST_START_TEST (interpipe_enable_sync)
       ("videotestsrc name=vtsrc1 is-live=true pattern=18 ! capsfilter caps=video/x-raw,width=320,height=240,framerate=(fraction)5/1 ! interpipesink "
           "name=intersink1 drop=true async=false sync=true", &error));
   fail_if (error);
-
   vtsrc1 = gst_bin_get_by_name (GST_BIN (sink1), "vtsrc1");
-
   sink2 =
       GST_PIPELINE (gst_parse_launch
       ("videotestsrc name=vtsrc2 is-live=true ! capsfilter caps=video/x-raw,width=320,height=240,framerate=(fraction)5/1 ! interpipesink "
           "name=intersink2 drop=true async=false sync=true", &error));
   fail_if (error);
-
   vtsrc2 = gst_bin_get_by_name (GST_BIN (sink2), "vtsrc2");
 
-
-
   /* Create one source pipeline */
-
   src =
       GST_PIPELINE (gst_parse_launch
       ("interpipesrc name=intersrc listen-to=intersink1 enable-sync=true block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
           "appsink name=asink drop=true async=false sync=true", &error));
   fail_if (error);
-
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
-
   asink = gst_bin_get_by_name (GST_BIN (src), "asink");
 
   /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-
-  sleep (1);
-
-  gst_element_change_state (GST_ELEMENT (src),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-
-  sleep (1);
-
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
+  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING);
 
   /* Verifies if the caps are set correctly to the listeners
    */
@@ -108,7 +90,6 @@ GST_START_TEST (interpipe_enable_sync)
 
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink2", NULL);
 
-  sleep (1);
   outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
   buffer = gst_sample_get_buffer (outsample);
   buffer_timestamp2 = GST_BUFFER_PTS (buffer);
@@ -117,11 +98,9 @@ GST_START_TEST (interpipe_enable_sync)
   fail_if (buffer_timestamp2 < buffer_timestamp1);
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src), GST_STATE_CHANGE_READY_TO_NULL);
+  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
 
   /* Cleanup */
   g_object_unref (sink1);
