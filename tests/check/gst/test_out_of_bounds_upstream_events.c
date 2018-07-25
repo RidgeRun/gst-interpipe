@@ -21,7 +21,6 @@
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -114,8 +113,6 @@ GST_START_TEST (interpipe_out_of_bounds_upstream_events_one_listener)
   gst_element_set_state (pipelinesrc, GST_STATE_PLAYING);
   gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
 
-  sleep (1);
-
   /* Create pads */
   srcpad = gst_element_get_static_pad (appsrc, "src");
   fail_if (!srcpad);
@@ -128,8 +125,6 @@ GST_START_TEST (interpipe_out_of_bounds_upstream_events_one_listener)
   /* Send Latency event */
   latency = 1;
   fail_if (!gst_pad_push_event (sinkpad, gst_event_new_latency (latency)));
-
-  sleep (1);
 
   /* Stop pipelines */
   gst_element_set_state (pipelinesrc, GST_STATE_NULL);
@@ -205,8 +200,6 @@ GST_START_TEST (interpipe_out_of_bounds_upstream_events_two_listeners)
   gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
   gst_element_set_state (pipelinesink2, GST_STATE_PLAYING);
 
-  sleep (1);
-
   /* Create pads */
   srcpad = gst_element_get_static_pad (appsrc, "src");
   fail_if (!srcpad);
@@ -219,8 +212,6 @@ GST_START_TEST (interpipe_out_of_bounds_upstream_events_two_listeners)
   /* Send Latency event */
   latency = 1;
   fail_if (!gst_pad_push_event (sinkpad, gst_event_new_latency (latency)));
-
-  sleep (1);
 
   /* Stop pipelines */
   gst_element_set_state (pipelinesrc, GST_STATE_NULL);
