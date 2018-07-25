@@ -21,7 +21,6 @@
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -73,8 +72,6 @@ GST_START_TEST (interpipe_out_of_bounds_events)
   gst_element_set_state (pipelinesrc, GST_STATE_PLAYING);
   gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
 
-  sleep (1);
-
   /* Create pads */
   srcpad = gst_element_get_static_pad (appsrc, "src");
   fail_if (!srcpad);
@@ -83,9 +80,6 @@ GST_START_TEST (interpipe_out_of_bounds_events)
 
   /* Send Flush Start event */
   fail_if (!gst_pad_push_event (srcpad, gst_event_new_flush_start ()));
-
-  sleep (1);
-
   fail_if (!GST_PAD_IS_FLUSHING (sinkpad));
 
   /* Stop pipelines */
