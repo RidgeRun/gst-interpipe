@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -69,20 +70,29 @@ GST_START_TEST (interpipe_set_caps)
   asink2 = gst_bin_get_by_name (GST_BIN (src2), "asink2");
 
   /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src1),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src2),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
 
   /* Verifies if the caps are set correctly to the listeners
    */
   outsample1 = gst_app_sink_pull_sample (GST_APP_SINK (asink1));
+  fail_if (!outsample1);
   caps1 = gst_sample_get_caps (outsample1);
   fail_if (!caps1);
 
+  fail_if (gst_app_sink_is_eos (GST_APP_SINK (asink2)));
   outsample2 = gst_app_sink_pull_sample (GST_APP_SINK (asink2));
+  fail_if (!outsample2);
   caps2 = gst_sample_get_caps (outsample2);
   fail_if (!caps2);
 
@@ -91,9 +101,9 @@ GST_START_TEST (interpipe_set_caps)
   gst_sample_unref (outsample2);
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src1), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src2), GST_STATE_CHANGE_READY_TO_NULL);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
 
   /* Cleanup */
   g_object_unref (vtest);
