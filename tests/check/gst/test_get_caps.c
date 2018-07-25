@@ -60,13 +60,16 @@ GST_START_TEST (interpipe_get_caps_one_interpipesrc)
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PAUSED);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PAUSED);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
+          NULL, NULL, GST_CLOCK_TIME_NONE));
 
   /* Verifies if interpipesink and interpipesrcs have the same caps
    */
-  sleep (1);
-
   caps1 = gst_app_src_get_caps (GST_APP_SRC (intersrc));
   fail_if (!caps1);
 
@@ -134,13 +137,21 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_intersection)
   intersrc2 = gst_bin_get_by_name (GST_BIN (src2), "intersrc2");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PAUSED);
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PAUSED);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PAUSED);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
 
   /* Verifies if interpipesink and interpipesrcs have the same caps
    */
-  sleep (1);
 
   caps1 = gst_app_src_get_caps (GST_APP_SRC (intersrc1));
   fail_if (gst_caps_is_empty (caps1));
@@ -217,20 +228,27 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_no_intersection)
   intersrc2 = gst_bin_get_by_name (GST_BIN (src2), "intersrc2");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PAUSED);
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PAUSED);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PAUSED);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
 
   /* Verifies if there are caps set in the elements
    */
 
-  sleep (1);
-
   caps1 = gst_app_src_get_caps (GST_APP_SRC (intersrc1));
-  fail_if (caps1);
+  fail_if (!caps1);
 
   caps2 = gst_app_src_get_caps (GST_APP_SRC (intersrc2));
-  fail_if (caps2);
+  fail_if (!caps2);
 
   caps3 = gst_app_sink_get_caps (GST_APP_SINK (intersink));
   fail_if (!caps3);
