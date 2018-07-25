@@ -72,14 +72,10 @@ GST_START_TEST (interpipe_buffer_properties)
   asink3 = gst_bin_get_by_name (GST_BIN (src3), "asink3");
 
   /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src1),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src2),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src3),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  gst_element_set_state (GST_ELEMENT (src3), GST_STATE_PLAYING);
 
   /* Create the buffer and insert a custom meta */
   buffer = gst_buffer_new ();
@@ -111,10 +107,10 @@ GST_START_TEST (interpipe_buffer_properties)
   gst_sample_unref (outsample);
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src1), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src2), GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src3), GST_STATE_CHANGE_READY_TO_NULL);
+  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
+  gst_element_set_state (GST_ELEMENT (src3), GST_STATE_NULL);
 
   /* Cleanup */
   g_object_unref (asrc);
