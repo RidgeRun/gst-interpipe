@@ -235,6 +235,10 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
           /* valid node_name, BaseSrc started */
           if (!gst_inter_pipe_src_listen_node (src, node_name)) {
             GST_ERROR_OBJECT (src, "Could not listen to node %s", node_name);
+            gst_inter_pipe_leave_node (listener);
+            gst_inter_pipe_src_listen_node (src, src->listen_to);
+            src->listening = TRUE;
+            GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
           } else {
             src->listen_to = node_name;
             src->listening = TRUE;

@@ -203,6 +203,8 @@ GST_START_TEST (interpipe_caps_renegotiation_no_intersection)
   fail_if (gst_caps_is_equal (caps1, caps2));
 
   g_object_get (G_OBJECT (intersrc1), "listen-to", &listen_to_new, NULL);
+  g_print ("listen_to_new: %s\n", listen_to_new);
+  g_print ("listen_to_old: %s\n", listen_to_old);
   fail_if (g_strcmp0 (listen_to_old, listen_to_new));
 
   gst_caps_unref (caps1);
@@ -219,7 +221,7 @@ GST_START_TEST (interpipe_caps_renegotiation_no_intersection)
   /* Cleanup */
   g_object_unref (intersink2);
   g_object_unref (intersrc1);
-  //g_object_unref (sink1); FIXME
+  g_object_unref (sink1);
   g_object_unref (sink2);
   g_object_unref (src1);
   g_object_unref (src2);
