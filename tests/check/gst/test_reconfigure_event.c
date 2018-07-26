@@ -72,6 +72,7 @@ GST_START_TEST (reconfigure_event)
   gboolean capschange = FALSE;
   gulong id;
   CondData conditiondata;
+  gint64 end_time;
   GError *error = NULL;
 
   g_mutex_init (&mutex);
@@ -150,8 +151,12 @@ GST_START_TEST (reconfigure_event)
   /* wait for the caps signal */
   g_mutex_lock (&mutex);
   capschange = FALSE;
+  end_time = g_get_monotonic_time () + 5 * G_TIME_SPAN_SECOND;
   while (!capschange) {
-    g_cond_wait (&cond, &mutex);
+    if (!g_cond_wait_until (&cond, &mutex, end_time)) {
+      // timeout has passed.
+      g_mutex_unlock (&mutex);
+    }
   }
   g_mutex_unlock (&mutex);
 
