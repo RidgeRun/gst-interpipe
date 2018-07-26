@@ -21,7 +21,6 @@
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -32,6 +31,26 @@
  * of caps would be done only if the interpipesink doesn't have other listeners and there is intersection
  * between the caps.
  */
+
+typedef struct _CondData
+{
+  GMutex *mutex;
+  GCond *cond;
+  gboolean *condition;
+} CondData;
+
+static void free_condition (GstPad * pad, const GParamSpec * pspec,
+    gpointer data);
+
+static void
+free_condition (GstPad * pad, const GParamSpec * pspec, gpointer data)
+{
+  CondData *conditiondata = (CondData *) data;
+  g_mutex_lock (conditiondata->mutex);
+  *conditiondata->condition = TRUE;
+  g_cond_signal (conditiondata->cond);
+  g_mutex_unlock (conditiondata->mutex);
+}
 
 GST_START_TEST (reconfigure_event)
 {
@@ -47,7 +66,16 @@ GST_START_TEST (reconfigure_event)
   GstElement *asink2;
   GstCaps *caps1;
   GstCaps *caps2;
+  GstPad *pad;
+  GMutex mutex;
+  GCond cond;
+  gboolean capschange = FALSE;
+  gulong id;
+  CondData conditiondata;
   GError *error = NULL;
+
+  g_mutex_init (&mutex);
+  g_cond_init (&cond);
 
   /* Create two sink pipelines */
   sink1 =
@@ -79,8 +107,19 @@ GST_START_TEST (reconfigure_event)
   intersrc2 = gst_bin_get_by_name (GST_BIN (src2), "intersrc2");
   asink2 = gst_bin_get_by_name (GST_BIN (src2), "asink2");
 
-  /* Play the pipelines */
+  /* Install a signal to monitor caps */
+  pad = GST_BASE_SRC_PAD (G_OBJECT (intersrc1));
+  fail_if (!pad);
+  g_object_notify (G_OBJECT (pad), "caps");
 
+  /*connect the caps signal */
+  conditiondata.mutex = &mutex;
+  conditiondata.cond = &cond;
+  conditiondata.condition = &capschange;
+  id = g_signal_connect (pad, "notify::caps", G_CALLBACK (free_condition),
+      (gpointer) & conditiondata);
+
+  /* Play the pipelines */
   gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
@@ -107,7 +146,14 @@ GST_START_TEST (reconfigure_event)
   g_object_set (G_OBJECT (intersrc2), "listen-to", NULL, NULL);
   g_object_set (G_OBJECT (intersrc1), "listen-to", "intersink2", NULL);
   g_object_set (G_OBJECT (intersrc2), "listen-to", "intersink1", NULL);
-  sleep (1);                    //FIXME
+
+  /* wait for the caps signal */
+  g_mutex_lock (&mutex);
+  capschange = FALSE;
+  while (!capschange) {
+    g_cond_wait (&cond, &mutex);
+  }
+  g_mutex_unlock (&mutex);
 
   caps2 = gst_app_src_get_caps (GST_APP_SRC (intersrc1));
   fail_if (!caps2);
@@ -118,6 +164,7 @@ GST_START_TEST (reconfigure_event)
   fail_if (!gst_caps_is_equal (caps1, caps2));
 
   /* Stop pipelines */
+  g_signal_handler_disconnect (pad, id);
   gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL);
   gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL);
   gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL);
@@ -134,6 +181,8 @@ GST_START_TEST (reconfigure_event)
   g_object_unref (src2);
   g_object_unref (asink1);
   g_object_unref (asink2);
+  g_mutex_clear (&mutex);
+  g_cond_clear (&cond);
 }
 
 GST_END_TEST;
