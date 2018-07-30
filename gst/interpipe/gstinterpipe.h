@@ -66,6 +66,7 @@ gboolean gst_inter_pipe_leave_node (GstInterPipeIListener * listener);
 /**
  * gst_inter_pipe_add_node:
  * @node: (transfer full)(not nullable): The node object to register
+ * @node_name:(transfer none)(not nullable): The name of the node to add
  *
  * Add a new node to the available nodes list
  *
@@ -77,7 +78,8 @@ gboolean gst_inter_pipe_add_node (GstInterPipeINode * node,
 
 /**
  * gst_inter_pipe_remove_node:
- * @node: (transfer none)(not nullable): The node object to be removed. 
+ * @node: (transfer none)(not nullable): The node object to be removed.
+ * @node_name:(transfer none)(not nullable): The name of the node to remove 
  *
  * Remove a node from the nodes list.
  *
