@@ -660,14 +660,6 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
     ret = gst_pad_push_event (srcpad, event);
   } else {
 
-    if (gst_app_src_get_current_level_bytes (appsrc) == 0) {
-      GST_DEBUG_OBJECT (src,
-          "Pushing the event instantly, because there are no buffers in queue");
-
-      ret = gst_pad_push_event (srcpad, event);
-      goto done;
-    }
-
     event = gst_event_make_writable (event);
     srcbasetime = gst_element_get_base_time (GST_ELEMENT (appsrc));
 
@@ -686,9 +678,6 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
 
     g_queue_push_tail (src->pending_serial_events, event);
   }
-
-done:
-
   return ret;
 no_events:
   {
