@@ -73,14 +73,17 @@ GST_START_TEST (interpipe_synchronization)
    * completed. It's used here to guarantee a secuential pipeline initialization
    * and avoid concurrency errors.
    */
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
           NULL, NULL, GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
@@ -104,9 +107,12 @@ GST_START_TEST (interpipe_synchronization)
   fail_if (buffer_timestamp2 < buffer_timestamp1);
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (sink1);

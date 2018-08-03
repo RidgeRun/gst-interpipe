@@ -83,10 +83,14 @@ GST_START_TEST (interpipe_allow_renegotiation_on)
       ("interpipesrc name=intersrc listen-to=sink2 block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,format=(string)I420,width=[320,1920],height=[240,1080],framerate=(fraction)30/1 ! "
           "appsink name=asink async=false", &error));
   /* Play the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING);
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING));
 
   /* Check the listen-to property when its changed. */
 
@@ -96,10 +100,14 @@ GST_START_TEST (interpipe_allow_renegotiation_on)
   fail_if (g_strcmp0 (listen_to_1, listen_to_2) == 0);
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (vtsrc1);
@@ -169,18 +177,22 @@ GST_START_TEST (interpipe_allow_renegotiation_off)
    * completed. It's used here to guarantee a secuential pipeline initialization
    * and avoid concurrency errors.
    */
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink2), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
           NULL, NULL, GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
           GST_CLOCK_TIME_NONE));
@@ -193,10 +205,14 @@ GST_START_TEST (interpipe_allow_renegotiation_off)
   fail_if (!g_strcmp0 (listen_to_1, listen_to_2));
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (vtsrc1);

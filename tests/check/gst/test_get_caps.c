@@ -60,11 +60,13 @@ GST_START_TEST (interpipe_get_caps_one_interpipesrc)
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
           NULL, NULL, GST_CLOCK_TIME_NONE));
 
@@ -82,8 +84,10 @@ GST_START_TEST (interpipe_get_caps_one_interpipesrc)
   gst_caps_unref (caps2);
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (intersink);
@@ -137,15 +141,18 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_intersection)
   intersrc2 = gst_bin_get_by_name (GST_BIN (src2), "intersrc2");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
           GST_CLOCK_TIME_NONE));
@@ -170,9 +177,12 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_intersection)
   gst_caps_unref (caps3);
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (intersink);
@@ -228,15 +238,18 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_no_intersection)
   intersrc2 = gst_bin_get_by_name (GST_BIN (src2), "intersrc2");
 
   /* Ready the pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src2), NULL, NULL,
           GST_CLOCK_TIME_NONE));
@@ -254,9 +267,12 @@ GST_START_TEST (interpipe_get_caps_two_interpipesrcs_no_intersection)
   fail_if (!caps3);
 
   /* Stop pipelines */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL);
-  gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (src2), GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (intersink);

@@ -52,7 +52,8 @@ GST_START_TEST (interpipe_anonymous_connection)
   asink = gst_bin_get_by_name (GST_BIN (src), "asink");
 
   /* Play the source pipeline */
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
 
   /* Create sink pipeline */
   sink = GST_PIPELINE (gst_parse_launch ("appsrc name=asrc ! interpipesink "
@@ -62,7 +63,8 @@ GST_START_TEST (interpipe_anonymous_connection)
   asrc = gst_bin_get_by_name (GST_BIN (sink), "asrc");
 
   /* Play the sink pipeline */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING));
 
   /* Creating two buffers */
   buffer1 = gst_buffer_new ();
@@ -78,10 +80,12 @@ GST_START_TEST (interpipe_anonymous_connection)
   gst_sample_unref (outsample);
 
   /* Stop sink pipeline */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL));
 
   /* Play the sink pipeline */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_PLAYING));
 
   /* Push a buffer to the appsrc and receive it in the appsink */
   gst_app_src_push_buffer (GST_APP_SRC (asrc), buffer2);
@@ -93,10 +97,12 @@ GST_START_TEST (interpipe_anonymous_connection)
   gst_sample_unref (outsample);
 
   /* Stop the source pipeline first */
-  gst_element_set_state (GST_ELEMENT (src), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
 
   /* Stop the sink pipeline */
-  gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink), GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (asrc);

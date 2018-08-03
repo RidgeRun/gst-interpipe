@@ -69,8 +69,10 @@ GST_START_TEST (interpipe_out_of_bounds_events)
   gst_element_link_many (intersrc, fsink, NULL);
 
   /* Play the pipelines */
-  gst_element_set_state (pipelinesrc, GST_STATE_PLAYING);
-  gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesrc,
+          GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesink,
+          GST_STATE_PLAYING));
 
   /* Create pads */
   srcpad = gst_element_get_static_pad (appsrc, "src");
@@ -83,8 +85,10 @@ GST_START_TEST (interpipe_out_of_bounds_events)
   fail_if (!GST_PAD_IS_FLUSHING (sinkpad));
 
   /* Stop pipelines */
-  gst_element_set_state (pipelinesrc, GST_STATE_NULL);
-  gst_element_set_state (pipelinesink, GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesrc,
+          GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesink,
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (pipelinesrc);

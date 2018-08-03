@@ -86,8 +86,10 @@ GST_START_TEST (interpipe_in_bounds_events)
   gst_element_link_many (intersrc, identity, fsink, NULL);
 
   /* Play the pipelines */
-  gst_element_set_state (pipelinesrc, GST_STATE_PLAYING);
-  gst_element_set_state (pipelinesink, GST_STATE_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesrc,
+          GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesink,
+          GST_STATE_PLAYING));
 
   /* Creating buffers */
 
@@ -121,8 +123,10 @@ GST_START_TEST (interpipe_in_bounds_events)
   gst_app_src_push_buffer (GST_APP_SRC (appsrc), buf4);
 
   /* Stop pipelines */
-  gst_element_set_state (pipelinesrc, GST_STATE_NULL);
-  gst_element_set_state (pipelinesink, GST_STATE_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesrc,
+          GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (pipelinesink,
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (pipelinesrc);
