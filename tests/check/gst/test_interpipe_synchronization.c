@@ -67,7 +67,12 @@ GST_START_TEST (interpipe_synchronization)
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
   asink = gst_bin_get_by_name (GST_BIN (src), "asink");
 
-  /* Play the pipelines */
+  /* 
+   * Play the pipelines
+   * gst_element_get_state blocks up execution until the state change is
+   * completed. It's used here to guarantee a secuential pipeline initialization
+   * and avoid concurrency errors.
+   */
   gst_element_set_state (GST_ELEMENT (src), GST_STATE_PLAYING);
   fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
           NULL, NULL, GST_CLOCK_TIME_NONE));

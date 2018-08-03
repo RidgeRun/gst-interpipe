@@ -69,7 +69,12 @@ GST_START_TEST (interpipe_set_caps)
 
   asink2 = gst_bin_get_by_name (GST_BIN (src2), "asink2");
 
-  /* Play the pipelines */
+  /* 
+   * Play the pipelines
+   * gst_element_get_state blocks up execution until the state change is
+   * completed. It's used here to guarantee a secuential pipeline initialization
+   * and avoid concurrency errors.
+   */
   gst_element_set_state (GST_ELEMENT (src1), GST_STATE_PLAYING);
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (src1), NULL, NULL,

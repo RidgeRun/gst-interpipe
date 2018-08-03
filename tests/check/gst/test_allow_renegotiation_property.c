@@ -163,7 +163,12 @@ GST_START_TEST (interpipe_allow_renegotiation_off)
       GST_PIPELINE (gst_parse_launch
       ("interpipesrc name=intersrc2 listen-to=sink2 block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,format=(string)I420,width=[320,1920],height=[240,1080],framerate=(fraction)30/1 ! "
           "appsink name=asink async=false", &error));
-  /* Play the pipelines */
+  /* 
+   * Play the pipelines
+   * gst_element_get_state blocks up execution until the state change is
+   * completed. It's used here to guarantee a secuential pipeline initialization
+   * and avoid concurrency errors.
+   */
   gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING);
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
