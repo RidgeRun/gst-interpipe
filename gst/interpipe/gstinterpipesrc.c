@@ -237,9 +237,9 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
             GST_ERROR_OBJECT (src, "Could not listen to node %s", node_name);
           } else {
             src->listen_to = node_name;
-            src->listening = TRUE;
-            GST_INFO_OBJECT (src, "Listening to node %s", node_name);
           }
+          src->listening = TRUE;
+          GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
         } else {
           /* valid node_name, not started */
           g_free (src->listen_to);
@@ -720,7 +720,13 @@ gst_inter_pipe_src_listen_node (GstInterPipeSrc * src, const gchar * node_name)
   if (src->first_switch)
     src->first_switch = FALSE;
 
-  return gst_inter_pipe_listen_node (listener, node_name);
+  if (!gst_inter_pipe_listen_node (listener, node_name)) {
+    gst_inter_pipe_leave_node (listener);
+    gst_inter_pipe_listen_node (listener, src->listen_to);
+    return FALSE;
+  } else {
+    return TRUE;
+  }
 
 block_switch:
   {

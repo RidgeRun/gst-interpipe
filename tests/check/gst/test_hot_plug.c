@@ -21,7 +21,6 @@
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include <gst/check/gstcheck.h>
 #include <gst/video/gstvideometa.h>
 #include <gst/app/gstappsrc.h>
@@ -73,14 +72,18 @@ GST_START_TEST (interpipe_hot_plug_equal_caps)
   asink = gst_bin_get_by_name (GST_BIN (src), "asink");
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
 
-  /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-
+  /* 
+   * Play the pipelines
+   * gst_element_get_state blocks up execution until the state change is
+   * completed. It's used here to guarantee a secuential pipeline initialization
+   * and avoid concurrency errors.
+   */
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
 
   /* Check the listen-to property when its changed. */
   g_object_get (G_OBJECT (intersrc), "listen-to", &listen_to_1, NULL);
@@ -89,11 +92,12 @@ GST_START_TEST (interpipe_hot_plug_equal_caps)
   fail_if (g_strcmp0 (listen_to_1, listen_to_2) == 0);
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src), GST_STATE_CHANGE_READY_TO_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (vtsrc1);
@@ -152,27 +156,27 @@ GST_START_TEST (interpipe_hot_plug_different_caps)
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
 
   /* Play the pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
-  gst_element_change_state (GST_ELEMENT (src),
-      GST_STATE_CHANGE_PAUSED_TO_PLAYING);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
 
 
   /* Check the listen-to property when its changed. */
-  sleep (2);
   g_object_get (G_OBJECT (intersrc), "listen-to", &listen_to_1, NULL);
   g_object_set (G_OBJECT (intersrc), "listen-to", "sink2", NULL);
   g_object_get (G_OBJECT (intersrc), "listen-to", &listen_to_2, NULL);
   /* fail_if (!(g_strcmp0 (listen_to_1, listen_to_2) == 0)); */
 
   /* Stop pipelines */
-  gst_element_change_state (GST_ELEMENT (sink1),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (sink2),
-      GST_STATE_CHANGE_READY_TO_NULL);
-  gst_element_change_state (GST_ELEMENT (src), GST_STATE_CHANGE_READY_TO_NULL);
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_NULL));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_NULL));
 
   /* Cleanup */
   g_object_unref (vtsrc1);
