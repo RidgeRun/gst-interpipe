@@ -32,6 +32,26 @@ GstInterpipe is a plug-in with two elements which allow the communication betwee
 
 <release>
   <Version>
+  <revision>1.0.3</revision>
+   <branch>master</branch>
+   <name></name>
+   <created>2018-09-28</created>
+   <file-release rdf:resource="" />
+  </Version>
+</release>
+
+<release>
+  <Version>
+  <revision>1.0.2</revision>
+   <branch>master</branch>
+   <name></name>
+   <created>2017-04-20</created>
+   <file-release rdf:resource="" />
+  </Version>
+</release>
+
+<release>
+  <Version>
   <revision>1.0.1</revision>
    <branch>master</branch>
    <name></name>
