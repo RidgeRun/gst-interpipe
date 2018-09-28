@@ -237,9 +237,9 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
             GST_ERROR_OBJECT (src, "Could not listen to node %s", node_name);
           } else {
             src->listen_to = node_name;
-            src->listening = TRUE;
-            GST_INFO_OBJECT (src, "Listening to node %s", node_name);
           }
+          src->listening = TRUE;
+          GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
         } else {
           /* valid node_name, not started */
           g_free (src->listen_to);
@@ -660,14 +660,6 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
     ret = gst_pad_push_event (srcpad, event);
   } else {
 
-    if (gst_app_src_get_current_level_bytes (appsrc) == 0) {
-      GST_DEBUG_OBJECT (src,
-          "Pushing the event instantly, because there are no buffers in queue");
-
-      ret = gst_pad_push_event (srcpad, event);
-      goto done;
-    }
-
     event = gst_event_make_writable (event);
     srcbasetime = gst_element_get_base_time (GST_ELEMENT (appsrc));
 
@@ -686,9 +678,6 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
 
     g_queue_push_tail (src->pending_serial_events, event);
   }
-
-done:
-
   return ret;
 no_events:
   {
@@ -731,7 +720,13 @@ gst_inter_pipe_src_listen_node (GstInterPipeSrc * src, const gchar * node_name)
   if (src->first_switch)
     src->first_switch = FALSE;
 
-  return gst_inter_pipe_listen_node (listener, node_name);
+  if (!gst_inter_pipe_listen_node (listener, node_name)) {
+    gst_inter_pipe_leave_node (listener);
+    gst_inter_pipe_listen_node (listener, src->listen_to);
+    return FALSE;
+  } else {
+    return TRUE;
+  }
 
 block_switch:
   {

@@ -11,8 +11,6 @@ gst_inter_pipe_remove_node
 <SECTION>
 <FILE>gstinterpipeilistener</FILE>
 <TITLE>GstInterPipeIListener</TITLE>
-GST_INTER_PIPE_TYPE_ILISTENER
-GstInterPipeIListenerInterface
 gst_inter_pipe_ilistener_get_name
 gst_inter_pipe_ilistener_get_caps
 gst_inter_pipe_ilistener_set_caps
@@ -22,24 +20,35 @@ gst_inter_pipe_ilistener_push_buffer
 gst_inter_pipe_ilistener_push_event
 gst_inter_pipe_ilistener_send_eos
 GstInterPipeIListener
+<SUBSECTION Standard>
+GST_INTER_PIPE_TYPE_ILISTENER
+GST_INTER_PIPE_ILISTENER
+GST_INTER_PIPE_ILISTENER_GET_IFACE
+GST_INTER_PIPE_IS_ILISTENER
+GstInterPipeIListenerInterface
+gst_inter_pipe_ilistener_get_type
 </SECTION>
 
 <SECTION>
 <FILE>gstinterpipeinode</FILE>
 <TITLE>GstInterPipeINode</TITLE>
-GST_INTER_PIPE_TYPE_INODE
-GstInterPipeINodeInterface
 gst_inter_pipe_inode_add_listener
 gst_inter_pipe_inode_remove_listener
 gst_inter_pipe_inode_receive_event
 GstInterPipeINode
+<SUBSECTION Standard>
+GST_INTER_PIPE_INODE
+GST_INTER_PIPE_INODE_GET_IFACE
+GST_INTER_PIPE_IS_INODE
+GST_INTER_PIPE_TYPE_INODE
+gst_inter_pipe_inode_get_type
+GstInterPipeINodeInterface
 </SECTION>
 
 <SECTION>
 <FILE>gstinterpipesink</FILE>
 <TITLE>GstInterPipeSink</TITLE>
 GST_INTER_PIPE_SINK_LISTENERS
-GST_INTER_PIPE_SINK_PAD
 GstInterPipeSink
 <SUBSECTION Standard>
 GST_INTER_PIPE_SINK
@@ -55,8 +64,6 @@ gst_inter_pipe_sink_get_type
 <FILE>gstinterpipesrc</FILE>
 <TITLE>GstInterPipeSrc</TITLE>
 GstInterPipeSrc
-gst_inter_pipe_src_synchronize_buffer_received
-gst_inter_pipe_src_event
 <SUBSECTION Standard>
 GST_INTER_PIPE_SRC
 GST_INTER_PIPE_SRC_CLASS
