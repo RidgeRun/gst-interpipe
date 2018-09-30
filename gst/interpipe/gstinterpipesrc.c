@@ -389,7 +389,7 @@ gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
 
   basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
-  node = gst_inter_pipe_get_node (src->listen_to);
+  node = src->listen_to ? gst_inter_pipe_get_node (src->listen_to) : NULL;
 
   if (GST_EVENT_IS_UPSTREAM (event)) {
 
