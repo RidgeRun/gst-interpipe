@@ -336,9 +336,14 @@ gst_inter_pipe_src_finalize (GObject * object)
 static gboolean
 gst_inter_pipe_src_start (GstBaseSrc * base)
 {
+  GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
 
+  basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
+
+  if(!basesrc_class->start (base))
+      return FALSE;
 
   if (src->listen_to) {
     if (!gst_inter_pipe_src_listen_node (src, src->listen_to)) {
@@ -358,9 +363,11 @@ gst_inter_pipe_src_start (GstBaseSrc * base)
 static gboolean
 gst_inter_pipe_src_stop (GstBaseSrc * base)
 {
+  GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
   GstInterPipeIListener *listener;
 
+  basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
   listener = GST_INTER_PIPE_ILISTENER (src);
 
@@ -370,15 +377,17 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
     src->listening = FALSE;
   }
 
-  return TRUE;
+  return basesrc_class->stop (base);
 }
 
 static gboolean
 gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
 {
+  GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
   GstInterPipeINode *node;
 
+  basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
   node = gst_inter_pipe_get_node (src->listen_to);
 
@@ -393,7 +402,7 @@ gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
       GST_WARNING_OBJECT (src, "Node doesn't exist, event won't be forwarded");
   }
 
-  return TRUE;
+  return basesrc_class->event (base, event);
 }
 
 static GstFlowReturn
