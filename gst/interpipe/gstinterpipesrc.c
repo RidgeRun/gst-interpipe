@@ -63,6 +63,8 @@ enum
   PROP_ACCEPT_EOS_EVENT
 };
 
+#define DEFAULT_PROP_IS_LIVE TRUE
+
 static void gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
     const GValue * value, GParamSpec * pspec);
 static void gst_inter_pipe_src_get_property (GObject * object, guint prop_id,
@@ -212,6 +214,10 @@ gst_inter_pipe_src_init (GstInterPipeSrc * src)
   src->enable_sync = TRUE;
   src->accept_events = TRUE;
   src->accept_eos_event = TRUE;
+
+#if DEFAULT_PROP_IS_LIVE
+  gst_base_src_set_live (GST_BASE_SRC (src), DEFAULT_PROP_IS_LIVE);
+#endif
 }
 
 static void
