@@ -732,9 +732,11 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     if (!sink->caps_negotiated && !has_listeners) {
       if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
               gst_event_new_reconfigure ()))
-        goto reconfigure_event_error;
-
-      GST_INFO_OBJECT (sink, "Reconfigure event sent correctly");
+        GST_WARNING_OBJECT (sink,
+            "Reconfigure event failed, this might cause negotiation issues");
+      else {
+        GST_INFO_OBJECT (sink, "Reconfigure event sent correctly");
+      }
     }
 
     if (sink->caps_negotiated && has_listeners
@@ -789,11 +791,6 @@ sinkcaps_null:
 renegotiate_error:
   {
     GST_ERROR_OBJECT (sink, "Can not connect listener, caps do not intersect");
-    goto error;
-  }
-reconfigure_event_error:
-  {
-    GST_ERROR_OBJECT (sink, "Failed to reconfigure");
     goto error;
   }
 set_caps_failed:
