@@ -1,0 +1,8 @@
+# Feature options
+option('tests', type : 'feature', value : 'auto', yield : true, description : 'Enable tests')
+
+# Common options
+option('package-name', type : 'string', yield : true,
+       description : 'Package name to use in plugins')
+option('package-origin', type : 'string', value : 'Unknown package origin', yield : true,
+       description : 'Package origin URL to use in plugins')
