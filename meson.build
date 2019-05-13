@@ -164,5 +164,8 @@ foreach h : check_headers
   endif
 endforeach
 
+# Enter to each subdirectory and executes the meson.build
+subdir('gst')
+
 # Meson will generate a header file all the entries in the configuration data object
 configure_file(output : 'config.h', configuration : cdata)
