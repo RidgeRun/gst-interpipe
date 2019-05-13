@@ -37,7 +37,7 @@ cc = meson.get_compiler('c')
 
 # Verify if the warning flags are available in the compiler
 # If the flags is availale for the compiler it wiil be used in all compiler
-# invocations with the exception of compile tests,
+# invocations with the exception of compile tests.
 warning_flags = [
   '-Wmissing-declarations',
   '-Wmissing-prototypes',
@@ -166,6 +166,7 @@ endforeach
 
 # Enter to each subdirectory and executes the meson.build
 subdir('gst')
+subdir('tests')
 
 # Meson will generate a header file all the entries in the configuration data object
 configure_file(output : 'config.h', configuration : cdata)
