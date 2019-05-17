@@ -54,7 +54,6 @@ tests/check/test-registry.reg
 
 docs/plugins/gst-interpipe-decl-list.txt
 docs/plugins/gst-interpipe-decl.txt
-docs/plugins/gst-interpipe-docs.xml
 docs/plugins/gst-interpipe-overrides.txt
 docs/plugins/gst-interpipe-sections.new
 docs/plugins/gst-interpipe-sections.txt.new
