@@ -9,6 +9,7 @@ version_conf = configuration_data()
 version_conf.set('PACKAGE_VERSION', meson.project_version())
 version_conf.set('GST_API_VERSION', apiversion)
 version_conf.set('PACKAGE_NAME', 'GstInterpipe')
+version_conf.set('PACKAGE_URL', pkg_interpipes_url)
 configure_file(input : 'gst-interpipe-docs.xml.in',
   output : 'gst-interpipe-docs.xml',
   configuration: version_conf)
