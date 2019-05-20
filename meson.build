@@ -15,11 +15,8 @@ endif
 gst_interpipes_version_is_dev = gst_interpipes_version_minor % 2 == 1 and gst_interpipes_version_micro < 90
 
 # Find external dependencies
-glib_dep = dependency('glib-2.0')
-gst_dep = dependency('gstreamer-1.0')
-gst_base_dep = dependency('gstreamer-plugins-base-1.0')
-gst_app_dep = dependency('gstreamer-app-1.0')
-gst_check_dep = dependency('gstreamer-check-1.0')
+gst_app_dep = dependency('gstreamer-app-1.0', version : '>=1.0.5')
+gst_check_dep = dependency('gstreamer-check-1.0', version : '>=1.0.5')
 
 # Define compiler args and include directories
 gst_c_args = ['-DHAVE_CONFIG_H']
@@ -67,6 +64,7 @@ endforeach
 # Create an empty configuration object to set config.h information
 cdata = configuration_data()
 
+pkg_interpipes_url='http://developer.ridgerun.com/wiki/index.php?title=GstInterpipe'
 # Set config.h information
 cdata.set_quoted('GST_API_VERSION', apiversion)
 cdata.set_quoted('LOCALEDIR', join_paths(prefix, get_option('localedir')))
@@ -78,7 +76,7 @@ cdata.set_quoted('PACKAGE_NAME', 'GstInterpipe')
 cdata.set_quoted('PACKAGE_STRING', 'GstInterpipe @0@'.format(gst_interpipes_version))
 cdata.set_quoted('PACKAGE_TARNAME', 'gst-interpipe')
 cdata.set_quoted('PACKAGE_BUGREPORT', 'http://www.github.com/RidgeRun/gst-interpipe-1.0')
-cdata.set_quoted('PACKAGE_URL', 'http://developer.ridgerun.com/wiki/index.php?title=GstInterpipe')
+cdata.set_quoted('PACKAGE_URL', pkg_interpipes_url)
 cdata.set_quoted('PACKAGE_VERSION', gst_interpipes_version)
 cdata.set_quoted('PLUGINDIR', plugin_install_dir)
 cdata.set_quoted('VERSION', gst_interpipes_version)

@@ -23,7 +23,7 @@ test_defines = [
 ]
 
 # Define test dependencies
-test_deps=[ glib_dep, gst_dep, gst_base_dep, gst_app_dep, gst_check_dep, interpipes_dep]
+test_deps=[gst_app_dep, gst_check_dep, interpipes_dep]
 
 # Build and run tests
 foreach t : core_tests

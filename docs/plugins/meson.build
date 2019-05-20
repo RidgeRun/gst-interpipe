@@ -20,5 +20,5 @@ gnome.gtkdoc('gst-interpipes',
   src_dir : '@0@/gst/interpipe/'.format(meson.source_root()),
   gobject_typesfile : types,
   content_files : [version_entities],
-  dependencies : [glib_dep, gst_dep, gst_base_dep, gst_app_dep],
+  dependencies : [gst_app_dep],
   install : true)
