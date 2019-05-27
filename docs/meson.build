@@ -7,4 +7,6 @@ version_entities = configure_file(input : 'version.entities.in',
   configuration : docconf)
 
 # Enter to plugins subdirectory and execute the meson.build
-subdir('plugins')
+if get_option('enable-gtk-doc')
+  subdir('plugins')
+endif

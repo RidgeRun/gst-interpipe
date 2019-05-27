@@ -1,5 +1,6 @@
 # Feature options
 option('tests', type : 'feature', value : 'auto', yield : true, description : 'Enable tests')
+option('enable-gtk-doc', type : 'boolean', value : true, description : 'Use gtk-doc to build documentation')
 
 # Common options
 option('package-name', type : 'string', yield : true,
