@@ -27,7 +27,7 @@ apiversion = '1.0'
 
 # Define installation directories
 prefix = get_option('prefix')
-plugin_install_dir = join_paths(get_option('prefix'), get_option('libdir'), 'gstreamer-1.0')
+plugin_install_dir = join_paths(get_option('libdir'), 'gstreamer-1.0')
 
 # Get an object returns describing a compiler
 cc = meson.get_compiler('c')
