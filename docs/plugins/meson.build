@@ -16,8 +16,8 @@ configure_file(input : 'gst-interpipe-docs.xml.in',
 
 # Compiles and installs gtkdoc documentation into prefix/share/gtk-doc/html.
 gnome.gtkdoc('gst-interpipes',
-  main_xml : 'gst-interpipe-docs.xml',
-  src_dir : '@0@/gst/interpipe/'.format(meson.source_root()),
+  main_xml : '@0@/gst-interpipe-docs.xml'.format(meson.current_build_dir()),
+  src_dir : ['@0@/gst/interpipe/'.format(meson.source_root()), meson.current_build_dir()],
   gobject_typesfile : types,
   content_files : [version_entities],
   dependencies : [gst_app_dep],
