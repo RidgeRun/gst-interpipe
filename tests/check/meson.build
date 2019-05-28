@@ -25,6 +25,10 @@ test_defines = [
 # Define test dependencies
 test_deps=[gst_app_dep, gst_check_dep, interpipes_dep]
 
+# Define plugins path
+gst_dep = dependency('gstreamer-1.0')
+plugins_dir = gst_dep.get_pkgconfig_variable('pluginsdir')
+
 # Build and run tests
 foreach t : core_tests
   fname = t[0]
@@ -43,8 +47,9 @@ foreach t : core_tests
     )
     # Create enviomen object to  stores information about the environment
     # variables set during tests.
+
     env = environment()
-    env.set('GST_PLUGIN_PATH_1_0', meson.build_root() + '/gst/interpipe/:'+ plugin_install_dir)
+    env.set('GST_PLUGIN_PATH_1_0', meson.build_root() + '/gst/interpipe/:' + plugins_dir)
     env.set('GST_PLUGIN_SYSTEM_PATH_1_0', '')
     env.set('CK_DEFAULT_TIMEOUT', '120')
     env.set('GST_REGISTRY', '@0@/@1@.registry'.format(meson.current_build_dir(), test_name))
