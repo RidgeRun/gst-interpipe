@@ -49,7 +49,7 @@ foreach t : core_tests
     # variables set during tests.
 
     env = environment()
-    env.set('GST_PLUGIN_PATH_1_0', meson.build_root() + '/gst/interpipe/:' + plugins_dir)
+    env.set('GST_PLUGIN_PATH_1_0', interpipe_plugin_dir + ':' + plugins_dir)
     env.set('GST_PLUGIN_SYSTEM_PATH_1_0', '')
     env.set('CK_DEFAULT_TIMEOUT', '120')
     env.set('GST_REGISTRY', '@0@/@1@.registry'.format(meson.current_build_dir(), test_name))

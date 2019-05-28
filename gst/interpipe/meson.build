@@ -27,6 +27,8 @@ gst_interpipes_lib = library('gstinterpipes-@0@'.format(apiversion),
   dependencies : [gst_app_dep],
 )
 
+interpipe_plugin_dir = meson.current_build_dir()
+
 # Define the library as an internal dependency to the current build
 interpipes_dep = declare_dependency(link_with: gst_interpipes_lib,
   dependencies : [gst_app_dep])
