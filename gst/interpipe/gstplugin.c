@@ -49,5 +49,5 @@ GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     GST_VERSION_MINOR,
     interpipe,
     "Elements to communicate buffers across pipelines",
-    plugin_init, VERSION, "Proprietary", PACKAGE_NAME,
+    plugin_init, VERSION, "LGPL", PACKAGE_NAME,
     "http://www.ridgerun.com")
