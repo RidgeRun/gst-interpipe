@@ -257,6 +257,7 @@ gst_inter_pipe_sink_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec)
 {
   GstInterPipeSink *sink;
+  GHashTable *listeners;
 
   g_return_if_fail (GST_IS_INTER_PIPE_SINK (object));
 
