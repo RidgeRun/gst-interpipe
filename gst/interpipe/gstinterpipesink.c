@@ -54,7 +54,8 @@ enum
 {
   PROP_0,
   PROP_FORWARD_EOS,
-  PROP_FORWARD_EVENTS
+  PROP_FORWARD_EVENTS,
+  PROP_NUM_LISTENERS
 };
 
 static void gst_inter_pipe_sink_update_node_name (GstInterPipeSink * sink,
@@ -165,6 +166,11 @@ gst_inter_pipe_sink_class_init (GstInterPipeSinkClass * klass)
           "Forward downstream events to all the listeners (except for EOS)",
           FALSE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_NUM_LISTENERS,
+      g_param_spec_uint ("num-listeners", "Number of listeners",
+          "Number of interpipe sources listening to this specific sink",
+          0, G_MAXUINT, 0, G_PARAM_READABLE));
+
   basesink_class->get_caps = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_get_caps);
   basesink_class->set_caps = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_set_caps);
   basesink_class->event = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_event);
@@ -250,9 +256,20 @@ static void
 gst_inter_pipe_sink_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec)
 {
+  GstInterPipeSink *sink;
+  GHashTable *listeners;
+
   g_return_if_fail (GST_IS_INTER_PIPE_SINK (object));
 
+  sink = GST_INTER_PIPE_SINK (object);
+  listeners = GST_INTER_PIPE_SINK_LISTENERS (sink);
+
   switch (prop_id) {
+    case PROP_NUM_LISTENERS:
+      g_mutex_lock (&sink->listeners_mutex);
+      g_value_set_uint (value, g_hash_table_size (listeners));
+      g_mutex_unlock (&sink->listeners_mutex);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
