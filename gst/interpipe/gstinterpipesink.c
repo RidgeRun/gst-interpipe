@@ -746,8 +746,10 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
 
     has_listeners = 0 != g_hash_table_size (listeners);
 
-    if (!sink->caps_negotiated && !has_listeners) {
-      if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
+    if (!sink->caps_negotiated && !has_listeners
+	&& !gst_caps_is_equal (srccaps, sinkcaps)) {
+
+	if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
               gst_event_new_reconfigure ()))
         goto reconfigure_event_error;
 
