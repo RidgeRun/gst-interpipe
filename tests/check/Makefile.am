@@ -27,7 +27,7 @@ check_PROGRAMS = gst/test_allow_renegotiation_property \
                  gst/test_block_switch \
                  gst/test_buffer_properties \
                  gst/test_caps_renegotiation \
-                 gst/test_enable_sync \
+                 gst/test_stream_sync \
                  gst/test_get_caps \
                  gst/test_hot_plug \
                  gst/test_in_bounds_events \

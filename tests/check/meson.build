@@ -4,7 +4,7 @@ core_tests = [
   [ 'gst/test_anonymous_connection.c' ],
   [ 'gst/test_block_switch.c' ],
   [ 'gst/test_caps_renegotiation.c' ],
-  [ 'gst/test_enable_sync.c' ],
+  [ 'gst/test_stream_sync.c' ],
   [ 'gst/test_get_caps.c' ],
   [ 'gst/test_hot_plug.c' ],
   [ 'gst/test_in_bounds_events.c' ],

@@ -1,5 +1,6 @@
 /* GStreamer
  * Copyright (C) 2016 Erick Arroyo <erick.arroyo@ridgerun.com>
+ * Copyright (C) 2020 Jennifer Caballero <jennifer.caballero@ridgerun.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -27,11 +28,11 @@
 #include <gst/app/gstappsink.h>
 
 /*
- * Given two pipelines, play the first one, wait and the play 
+ * Given two pipelines, play the first one, wait and then play
  * the other one, it should not be delay in the video when it is display
- * only if the synchronization-switch property is enabled
+ * only if the stream-sync property is set to compensate-ts (2)
  */
-GST_START_TEST (interpipe_enable_sync)
+GST_START_TEST (interpipe_stream_sync_compensate_ts)
 {
   GstPipeline *sink1;
   GstPipeline *sink2;
@@ -66,7 +67,7 @@ GST_START_TEST (interpipe_enable_sync)
   /* Create one source pipeline */
   src =
       GST_PIPELINE (gst_parse_launch
-      ("interpipesrc name=intersrc listen-to=intersink1 enable-sync=true block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
+      ("interpipesrc name=intersrc listen-to=intersink1 stream-sync=compensate-ts block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
           "appsink name=asink drop=true async=false sync=true", &error));
   fail_if (error);
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
@@ -130,10 +131,10 @@ static Suite *
 gst_interpipe_suite (void)
 {
   Suite *suite = suite_create ("Interpipe");
-  TCase *tc1 = tcase_create ("interpipe_enable_sync");
+  TCase *tc1 = tcase_create ("interpipe_stream_sync");
 
   suite_add_tcase (suite, tc1);
-  tcase_add_test (tc1, interpipe_enable_sync);
+  tcase_add_test (tc1, interpipe_stream_sync_compensate_ts);
 
   return suite;
 }
