@@ -8,7 +8,6 @@ core_tests = [
   [ 'gst/test_get_caps.c' ],
   [ 'gst/test_hot_plug.c' ],
   [ 'gst/test_in_bounds_events.c' ],
-  [ 'gst/test_interpipe_synchronization.c' ],
   [ 'gst/test_invalid_caps.c' ],
   [ 'gst/test_node_name_removed.c' ],
   [ 'gst/test_out_of_bounds_events.c' ],

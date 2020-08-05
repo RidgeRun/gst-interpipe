@@ -1,5 +1,6 @@
 /* GStreamer
  * Copyright (C) 2016 Erick Arroyo <erick.arroyo@ridgerun.com>
+ * Copyright (C) 2016 Carlos Rodriguez <carlos.rodriguez@ridgerun.com>
  * Copyright (C) 2020 Jennifer Caballero <jennifer.caballero@ridgerun.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -81,10 +82,18 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
    */
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
   fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
           GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
+          NULL, NULL, GST_CLOCK_TIME_NONE));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE ==
+      gst_element_get_state (GST_ELEMENT (sink2), NULL, NULL,
+          GST_CLOCK_TIME_NONE));
 
   /* Verifies if the caps are set correctly to the listeners
    */
@@ -92,11 +101,9 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   buffer = gst_sample_get_buffer (outsample);
   fail_if (!buffer);
   buffer_timestamp1 = GST_BUFFER_PTS (buffer);
-  GST_ERROR ("Buffer timestamp (dts): %" GST_TIME_FORMAT,
-      GST_TIME_ARGS (GST_BUFFER_DTS (buffer)));
   fail_if (buffer_timestamp1 == 0);
-  /* Change to another video src */
 
+  /* Change to another video src */
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink2", NULL);
 
   outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
@@ -122,7 +129,7 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   g_object_unref (intersrc);
   g_object_unref (asink);
   g_object_unref (src);
-
+  gst_sample_unref (outsample);
 }
 
 GST_END_TEST;

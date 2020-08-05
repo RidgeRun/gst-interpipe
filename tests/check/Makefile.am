@@ -31,7 +31,6 @@ check_PROGRAMS = gst/test_allow_renegotiation_property \
                  gst/test_get_caps \
                  gst/test_hot_plug \
                  gst/test_in_bounds_events \
-                 gst/test_interpipe_synchronization \
                  gst/test_invalid_caps \
                  gst/test_node_name_removed \
                  gst/test_out_of_bounds_events \
