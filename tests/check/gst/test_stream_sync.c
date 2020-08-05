@@ -102,6 +102,7 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   fail_if (!buffer);
   buffer_timestamp1 = GST_BUFFER_PTS (buffer);
   fail_if (buffer_timestamp1 == 0);
+  gst_sample_unref (outsample);
 
   /* Change to another video src */
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink2", NULL);
@@ -112,6 +113,17 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   fail_if (buffer_timestamp2 == 0);
 
   fail_if (buffer_timestamp2 < buffer_timestamp1);
+  gst_sample_unref (outsample);
+
+  /* Now change to the first video src and pull another buffer */
+  g_object_set (G_OBJECT (intersrc), "listen-to", "intersink1", NULL);
+
+  outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
+  buffer = gst_sample_get_buffer (outsample);
+  buffer_timestamp1 = GST_BUFFER_PTS (buffer);
+  fail_if (buffer_timestamp1 == 0);
+
+  fail_if (buffer_timestamp1 < buffer_timestamp2);
 
   /* Stop pipelines */
   fail_if (GST_STATE_CHANGE_FAILURE ==
