@@ -103,6 +103,11 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   fail_if (buffer_timestamp1 == 0);
   gst_sample_unref (outsample);
 
+  /* Disconnect interpipesrc and flush old buffers */
+  g_object_set (G_OBJECT (intersrc), "listen-to", NULL, NULL);
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_start()));
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_stop(FALSE)));
+
   /* Change to another video src */
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink2", NULL);
 
@@ -113,6 +118,11 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
 
   fail_if (buffer_timestamp2 < buffer_timestamp1);
   gst_sample_unref (outsample);
+
+  /* Disconnect interpipesrc and flush old buffers */
+  g_object_set (G_OBJECT (intersrc), "listen-to", NULL, NULL);
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_start()));
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_stop(FALSE)));
 
   /* Now change to the first video src and pull another buffer */
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink1", NULL);
