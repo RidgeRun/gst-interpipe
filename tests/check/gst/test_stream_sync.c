@@ -40,6 +40,7 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   GstPipeline *src;
   GstElement *vtsrc1;
   GstElement *vtsrc2;
+
   GstElement *intersrc;
   GstElement *asink;
   GstSample *outsample;
@@ -64,7 +65,9 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
   /* Create one source pipeline */
   src =
       GST_PIPELINE (gst_parse_launch
-      ("interpipesrc name=intersrc listen-to=intersink1 stream-sync=compensate-ts block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
+      ("interpipesrc name=intersrc listen-to=intersink1 stream-sync=compensate-ts "
+          "block-switch=false allow-renegotiation=true format=3 ! capsfilter "
+          "caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
           "appsink name=asink drop=true async=false sync=true", &error));
   fail_if (error);
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
