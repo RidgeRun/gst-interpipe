@@ -37,13 +37,9 @@ GST_START_TEST (interpipe_stream_sync_compensate_ts)
 {
   GstPipeline *sink1;
   GstPipeline *sink2;
-
-
   GstPipeline *src;
   GstElement *vtsrc1;
   GstElement *vtsrc2;
-
-
   GstElement *intersrc;
   GstElement *asink;
   GstSample *outsample;
