@@ -1,5 +1,7 @@
 /* GStreamer
+ * Copyright (C) 2016 Erick Arroyo <erick.arroyo@ridgerun.com>
  * Copyright (C) 2016 Carlos Rodriguez <carlos.rodriguez@ridgerun.com>
+ * Copyright (C) 2020 Jennifer Caballero <jennifer.caballero@ridgerun.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -27,16 +29,18 @@
 #include <gst/app/gstappsink.h>
 
 /*
- * Given two pipelines, play the first one, wait and the play 
+ * Given two pipelines, play the first one, wait and then play
  * the other one, it should not be delay in the video when it is display
+ * only if the stream-sync property is set to compensate-ts (2)
  */
-GST_START_TEST (interpipe_synchronization)
+GST_START_TEST (interpipe_stream_sync_compensate_ts)
 {
   GstPipeline *sink1;
   GstPipeline *sink2;
   GstPipeline *src;
   GstElement *vtsrc1;
   GstElement *vtsrc2;
+
   GstElement *intersrc;
   GstElement *asink;
   GstSample *outsample;
@@ -61,7 +65,9 @@ GST_START_TEST (interpipe_synchronization)
   /* Create one source pipeline */
   src =
       GST_PIPELINE (gst_parse_launch
-      ("interpipesrc name=intersrc listen-to=intersink1 block-switch=false allow-renegotiation=true format=3 ! capsfilter caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
+      ("interpipesrc name=intersrc listen-to=intersink1 stream-sync=compensate-ts "
+          "block-switch=false allow-renegotiation=true format=3 ! capsfilter "
+          "caps=video/x-raw,width=[320,1920],height=[240,1080],framerate=(fraction)5/1 ! "
           "appsink name=asink drop=true async=false sync=true", &error));
   fail_if (error);
   intersrc = gst_bin_get_by_name (GST_BIN (src), "intersrc");
@@ -73,19 +79,19 @@ GST_START_TEST (interpipe_synchronization)
    * completed. It's used here to guarantee a secuential pipeline initialization
    * and avoid concurrency errors.
    */
-  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
-          GST_STATE_PLAYING));
-  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
-          NULL, NULL, GST_CLOCK_TIME_NONE));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_set_state (GST_ELEMENT (sink1), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
           GST_CLOCK_TIME_NONE));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_set_state (GST_ELEMENT (src),
+          GST_STATE_PLAYING));
+  fail_if (GST_STATE_CHANGE_FAILURE == gst_element_get_state (GST_ELEMENT (src),
+          NULL, NULL, GST_CLOCK_TIME_NONE));
   fail_if (GST_STATE_CHANGE_FAILURE ==
       gst_element_set_state (GST_ELEMENT (sink2), GST_STATE_PLAYING));
   fail_if (GST_STATE_CHANGE_FAILURE ==
-      gst_element_get_state (GST_ELEMENT (sink1), NULL, NULL,
+      gst_element_get_state (GST_ELEMENT (sink2), NULL, NULL,
           GST_CLOCK_TIME_NONE));
 
   /* Verifies if the caps are set correctly to the listeners
@@ -93,18 +99,40 @@ GST_START_TEST (interpipe_synchronization)
   outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
   buffer = gst_sample_get_buffer (outsample);
   fail_if (!buffer);
-  buffer_timestamp1 = GST_BUFFER_DTS (buffer);
-  GST_ERROR ("Buffer timestamp (dts): %" GST_TIME_FORMAT,
-      GST_TIME_ARGS (GST_BUFFER_DTS (buffer)));
+  buffer_timestamp1 = GST_BUFFER_PTS (buffer);
   fail_if (buffer_timestamp1 == 0);
+  gst_sample_unref (outsample);
+
+  /* Disconnect interpipesrc and flush old buffers */
+  g_object_set (G_OBJECT (intersrc), "listen-to", NULL, NULL);
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_start()));
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_stop(FALSE)));
 
   /* Change to another video src */
   g_object_set (G_OBJECT (intersrc), "listen-to", "intersink2", NULL);
+
   outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
   buffer = gst_sample_get_buffer (outsample);
   buffer_timestamp2 = GST_BUFFER_PTS (buffer);
   fail_if (buffer_timestamp2 == 0);
+
   fail_if (buffer_timestamp2 < buffer_timestamp1);
+  gst_sample_unref (outsample);
+
+  /* Disconnect interpipesrc and flush old buffers */
+  g_object_set (G_OBJECT (intersrc), "listen-to", NULL, NULL);
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_start()));
+  fail_if (!gst_element_send_event(GST_ELEMENT(src), gst_event_new_flush_stop(FALSE)));
+
+  /* Now change to the first video src and pull another buffer */
+  g_object_set (G_OBJECT (intersrc), "listen-to", "intersink1", NULL);
+
+  outsample = gst_app_sink_pull_sample (GST_APP_SINK (asink));
+  buffer = gst_sample_get_buffer (outsample);
+  buffer_timestamp1 = GST_BUFFER_PTS (buffer);
+  fail_if (buffer_timestamp1 == 0);
+
+  fail_if (buffer_timestamp1 < buffer_timestamp2);
 
   /* Stop pipelines */
   fail_if (GST_STATE_CHANGE_FAILURE ==
@@ -131,11 +159,10 @@ static Suite *
 gst_interpipe_suite (void)
 {
   Suite *suite = suite_create ("Interpipe");
-  TCase *tc = tcase_create ("interpipe_synchronization");
+  TCase *tc1 = tcase_create ("interpipe_stream_sync");
 
-  tcase_set_timeout (tc, 0);
-  suite_add_tcase (suite, tc);
-  tcase_add_test (tc, interpipe_synchronization);
+  suite_add_tcase (suite, tc1);
+  tcase_add_test (tc1, interpipe_stream_sync_compensate_ts);
 
   return suite;
 }
