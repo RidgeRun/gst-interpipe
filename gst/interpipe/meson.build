@@ -17,10 +17,9 @@ gst_interpipes_headers = [
 ]
 
 # Build plugin library
-gst_interpipes_lib = library('gstinterpipes-@0@'.format(apiversion),
+gst_interpipes_lib = library('gstinterpipe',
   gst_interpipes_sources,
   c_args : gst_c_args,
-  version : apiversion,
   include_directories : configinc,
   install : true,
   install_dir : plugin_install_dir,
