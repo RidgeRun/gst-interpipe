@@ -1,3 +1,10 @@
+gst-interpipe (1.1.2-1) unstable; urgency=medium
+
+  * Avoid sending renegotiation event when the caps don't change
+  * Stream sync: Flush old buffers when switching sources
+
+ -- Ridgerun Engineering <support@ridgerun.com>  Mon, 07 Sep 2020 17:44:00 -0600
+
 gst-interpipe (1.0-5) unstable; urgency=medium
 
   * Initial release
