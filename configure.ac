@@ -6,7 +6,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/pre
-AC_INIT([GstInterpipe],[1.1.2],
+AC_INIT([GstInterpipe],[1.1.3],
 	[http://www.github.com/RidgeRun/gst-interpipe-1.0],
 	[gst-interpipe],
 	[http://developer.ridgerun.com/wiki/index.php?title=GstInterpipe])
