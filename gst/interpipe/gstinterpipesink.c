@@ -742,7 +742,7 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     gboolean has_listeners;
 
     if (!sinkcaps)
-      goto sinkcaps_null;
+      goto add_to_list;
 
     has_listeners = 0 != g_hash_table_size (listeners);
 
@@ -786,6 +786,7 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
   if (sinkcaps)
     gst_caps_unref (sinkcaps);
 
+add_to_list:
   g_mutex_lock (&sink->listeners_mutex);
   if (g_hash_table_contains (listeners, listener_name))
     goto already_registered;
@@ -798,13 +799,6 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
   return TRUE;
 
 /* Errors */
-sinkcaps_null:
-  {
-    GST_ERROR_OBJECT (sink,
-        "Can not add listener %s because our caps are not defined yet",
-        listener_name);
-    goto error;
-  }
 renegotiate_error:
   {
     GST_ERROR_OBJECT (sink, "Can not connect listener, caps do not intersect");
