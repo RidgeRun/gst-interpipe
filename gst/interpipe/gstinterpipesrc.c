@@ -87,6 +87,8 @@ static gboolean gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
 static gboolean gst_inter_pipe_src_push_event (GstInterPipeIListener * iface,
     GstEvent * event, guint64 basetime);
 static gboolean gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface);
+static gboolean gst_inter_pipe_src_push_query (GstInterPipeIListener * iface,
+    GstQuery * query);
 static gboolean gst_inter_pipe_src_listen_node (GstInterPipeSrc * src,
     const gchar * node_name);
 static gboolean gst_inter_pipe_src_start (GstBaseSrc * base);
@@ -508,6 +510,7 @@ gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface * iface)
   iface->set_caps = gst_inter_pipe_src_set_caps;
   iface->push_buffer = gst_inter_pipe_src_push_buffer;
   iface->push_event = gst_inter_pipe_src_push_event;
+  iface->query = gst_inter_pipe_src_push_query;
   iface->send_eos = gst_inter_pipe_src_send_eos;
 }
 
@@ -739,6 +742,7 @@ no_events:
   }
 }
 
+
 static gboolean
 gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface)
 {
@@ -757,6 +761,33 @@ gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface)
   }
   return TRUE;
 }
+
+
+static gboolean
+gst_inter_pipe_src_push_query (GstInterPipeIListener * iface, GstQuery * query)
+{
+  GstInterPipeSrc *src;
+  GstPad *srcpad;
+  GstPad *peerpad;
+  gboolean ret = TRUE;
+
+  src = GST_INTER_PIPE_SRC (iface);
+  srcpad = GST_INTER_PIPE_SRC_PAD (GST_APP_SRC (src));
+
+  peerpad = gst_pad_get_peer (srcpad);
+  if (!peerpad) {
+    ret = FALSE;
+    goto out;
+  }
+
+  ret = gst_pad_query (peerpad, query);
+
+  gst_object_unref (peerpad);
+
+out:
+  return ret;
+}
+
 
 static gboolean
 gst_inter_pipe_src_listen_node (GstInterPipeSrc * src, const gchar * node_name)
