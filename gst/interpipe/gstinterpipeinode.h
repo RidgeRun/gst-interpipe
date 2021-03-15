@@ -64,7 +64,7 @@ struct _GstInterPipeINodeInterface
 
   gboolean (* add_listener) (GstInterPipeINode *iface, GstInterPipeIListener * listener);
   gboolean (* remove_listener) (GstInterPipeINode *iface, GstInterPipeIListener * listener);
-  gboolean (* receive_event) (GstInterPipeINode *iface, GstEvent *event);
+  gboolean (* receive_event) (GstInterPipeINode *iface, GstInterPipeIListener * listener, GstEvent *event);
 };
 
 /**
@@ -102,7 +102,7 @@ gboolean gst_inter_pipe_inode_remove_listener (GstInterPipeINode *iface, GstInte
  *
  * Returns: True if the node is able to receive the event, False otherwise.
  */
-gboolean gst_inter_pipe_inode_receive_event (GstInterPipeINode *iface, GstEvent *event);
+gboolean gst_inter_pipe_inode_receive_event (GstInterPipeINode *iface, GstInterPipeIListener * listener, GstEvent *event);
 
 GType gst_inter_pipe_inode_get_type (void);
 
