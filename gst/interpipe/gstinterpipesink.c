@@ -75,7 +75,7 @@ static gboolean gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
 static gboolean gst_inter_pipe_sink_remove_listener (GstInterPipeINode * iface,
     GstInterPipeIListener * listener);
 static gboolean gst_inter_pipe_sink_receive_event (GstInterPipeINode * iface,
-    GstEvent * event);
+    GstInterPipeIListener * listener, GstEvent * event);
 static GstCaps *gst_inter_pipe_sink_get_caps (GstBaseSink * base,
     GstCaps * filter);
 static gboolean gst_inter_pipe_sink_set_caps (GstBaseSink * base,
@@ -870,7 +870,7 @@ not_registered:
 }
 
 static gboolean
-gst_inter_pipe_sink_receive_event (GstInterPipeINode * iface, GstEvent * event)
+gst_inter_pipe_sink_receive_event (GstInterPipeINode * iface, GstInterPipeIListener * listener, GstEvent * event)
 {
   GstInterPipeSink *self;
   GHashTable *listeners;
@@ -889,8 +889,11 @@ gst_inter_pipe_sink_receive_event (GstInterPipeINode * iface, GstEvent * event)
 
 multiple_listeners:
   {
-    GST_WARNING_OBJECT (self, "Could not send event upstream, "
-        "more than one listener is connected");
+    gchar* evtype = g_ascii_strup(GST_EVENT_TYPE_NAME(event), -1);
+    GST_WARNING_OBJECT (self,
+        "Could not send %s event from %s upstream, more than one listener is connected",
+        evtype, gst_inter_pipe_ilistener_get_name(listener));
+    g_free(evtype);
     return FALSE;
   }
 }
