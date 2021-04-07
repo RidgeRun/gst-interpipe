@@ -204,7 +204,7 @@ gst_inter_pipe_sink_init (GstInterPipeSink * sink)
   sink->node_name = NULL;
   sink->listeners = g_hash_table_new (g_direct_hash, g_direct_equal);
   sink->forward_eos = FALSE;
-  sink->forward_events = TRUE;
+  sink->forward_events = FALSE;
   sink->last_buffer_timestamp = 0;
 
   g_mutex_init (&sink->listeners_mutex);
