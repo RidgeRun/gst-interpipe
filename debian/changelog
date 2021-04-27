@@ -1,11 +1,25 @@
-gst-interpipe (1.1.2-1) unstable; urgency=medium
+libgstinterpipe (1.1.4-1) UNRELEASED; urgency=medium
+
+  * Fix for memory leak in listen-to property
+
+ -- Ridgerun Engineering <support@ridgerun.com>  Mon, 29 Mar 2021 18:00:00 -0600
+
+libgstinterpipe (1.1.3-1) UNRELEASED; urgency=medium
+
+  * Fix for plugin getting blacklisted
+  * Change to allow interpipesink to add listener with empty caps
+  * Downgrade to GStreamer common 1.12 to avoid gtkdoc enabled build errors in GStreamer versions 1.8 - 1.12
+
+ -- Ridgerun Engineering <support@ridgerun.com>  Thu, 24 Sep 2020 18:00:00 -0600
+
+libgstinterpipe (1.1.2-1) UNRELEASED; urgency=medium
 
   * Avoid sending renegotiation event when the caps don't change
   * Stream sync: Flush old buffers when switching sources
 
  -- Ridgerun Engineering <support@ridgerun.com>  Mon, 07 Sep 2020 17:44:00 -0600
 
-gst-interpipe (1.0-5) unstable; urgency=medium
+libgstinterpipe (1.0-5) UNRELEASED; urgency=medium
 
   * Initial release
 
