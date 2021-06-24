@@ -1,3 +1,10 @@
+libgstinterpipe (1.1.5-1) UNRELEASED; urgency=medium
+
+  * Fix a memory leak for g_strdup
+  * interpipesink: Initialize forward-events in false
+
+ -- RidgeRun Engineering <support@ridgerun.com>  Thu, 24 Jun 2021 18:00:00 -0600
+
 libgstinterpipe (1.1.4-1) UNRELEASED; urgency=medium
 
   * Fix for memory leak in listen-to property
