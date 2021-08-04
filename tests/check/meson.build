@@ -22,6 +22,7 @@ test_defines = [
 ]
 
 # Define test dependencies
+gst_check_dep = dependency('gstreamer-check-1.0', version : '>=1.0.5')
 test_deps=[gst_app_dep, gst_check_dep, interpipes_dep]
 
 # Define plugins path
