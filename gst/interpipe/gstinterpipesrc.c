@@ -479,13 +479,14 @@ gst_inter_pipe_src_create (GstBaseSrc * base, guint64 offset, guint size,
       "Dequeue buffer %p with timestamp (PTS) %" GST_TIME_FORMAT, *buf,
       GST_TIME_ARGS (GST_BUFFER_PTS (*buf)));
 
-  if (!g_queue_is_empty (src->pending_serial_events)) {
+  while (!g_queue_is_empty (src->pending_serial_events)) {
     guint curr_bytes;
     /*Pending Serial Events Queue */
     serial_event = g_queue_peek_head (src->pending_serial_events);
 
     GST_DEBUG_OBJECT (src,
-        "Got event with timestamp %" GST_TIME_FORMAT,
+        "Got event %s with timestamp %" GST_TIME_FORMAT,
+        GST_EVENT_TYPE_NAME (serial_event),
         GST_TIME_ARGS (GST_EVENT_TIMESTAMP (serial_event)));
 
     curr_bytes = gst_app_src_get_current_level_bytes (GST_APP_SRC (src));
@@ -501,6 +502,7 @@ gst_inter_pipe_src_create (GstBaseSrc * base, guint64 offset, guint size,
       GST_DEBUG_OBJECT (src, "Event %s timestamp is greater than the "
           "buffer timestamp, can't send serial event yet",
           GST_EVENT_TYPE_NAME (serial_event));
+          break;
     }
   }
 
