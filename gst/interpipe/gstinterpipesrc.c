@@ -725,8 +725,11 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
     srcbasetime = gst_element_get_base_time (GST_ELEMENT (appsrc));
 
     if (srcbasetime > basetime) {
-      GST_EVENT_TIMESTAMP (event) =
-          GST_EVENT_TIMESTAMP (event) - (srcbasetime - basetime);
+      if (GST_EVENT_TIMESTAMP (event) > (srcbasetime - basetime))
+        GST_EVENT_TIMESTAMP (event) =
+            GST_EVENT_TIMESTAMP (event) - (srcbasetime - basetime);
+      else
+        GST_EVENT_TIMESTAMP (event) = 0;
     } else {
       GST_EVENT_TIMESTAMP (event) =
           GST_EVENT_TIMESTAMP (event) + (basetime - srcbasetime);
