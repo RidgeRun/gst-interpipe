@@ -260,7 +260,11 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
   switch (prop_id) {
     case PROP_LISTEN_TO:
       node_name = g_strdup (g_value_get_string (value));
-      if (node_name != NULL) {
+      if (!g_strcmp0 (src->listen_to, node_name)) {
+        /* We are already listening to that node, so nothing to do */
+        GST_INFO ("Already listening to node %s", node_name);
+        g_free (node_name);
+      } else if (node_name != NULL) {
         if (GST_BASE_SRC_IS_STARTED (GST_BASE_SRC (src))) {
           /* valid node_name, BaseSrc started */
           if (!gst_inter_pipe_src_listen_node (src, node_name)) {
