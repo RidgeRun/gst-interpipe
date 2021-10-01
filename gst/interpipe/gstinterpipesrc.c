@@ -362,6 +362,11 @@ gst_inter_pipe_src_finalize (GObject * object)
 
   src = GST_INTER_PIPE_SRC (object);
 
+  if (src->listen_to) {
+    g_free (src->listen_to);
+    src->listen_to = NULL;
+  }
+
   /* Free pending serial events queue */
   g_queue_free_full (src->pending_serial_events,
       (GDestroyNotify) gst_event_unref);
