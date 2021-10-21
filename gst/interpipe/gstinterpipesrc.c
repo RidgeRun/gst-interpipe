@@ -366,13 +366,13 @@ gst_inter_pipe_src_finalize (GObject * object)
   g_queue_free_full (src->pending_serial_events,
       (GDestroyNotify) gst_event_unref);
 
-  /* Chain up to the parent class */
-  G_OBJECT_CLASS (gst_inter_pipe_src_parent_class)->finalize (object);
-
   if (src->listen_to) {
     g_free (src->listen_to);
     src->listen_to = NULL;
   }
+
+  /* Chain up to the parent class */
+  G_OBJECT_CLASS (gst_inter_pipe_src_parent_class)->finalize (object);
 }
 
 /* GstBaseSrc Implementation*/
