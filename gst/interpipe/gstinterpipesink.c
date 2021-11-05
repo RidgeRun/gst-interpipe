@@ -407,7 +407,7 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
   GstInterPipeSink *sink;
   GstInterPipeIListener *listener;
   GHashTable *listeners;
-  GstCaps *pre_filter;
+  GstCaps *resulting_caps = NULL;
   GList *listeners_list = NULL;
   GList *l = NULL;
 
@@ -434,22 +434,22 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
     goto nointersection;
   }
 
+  GST_DEBUG_OBJECT (sink, "Filtering listener caps %" GST_PTR_FORMAT
+      " with filter %" GST_PTR_FORMAT, sink->caps_negotiated, filter);
+
   /* Take into account upsream caps suggestion */
-  pre_filter = sink->caps_negotiated;
-  sink->caps_negotiated =
-      gst_inter_pipe_sink_caps_intersect (pre_filter, filter);
-  gst_caps_unref (pre_filter);
+  resulting_caps =
+      gst_inter_pipe_sink_caps_intersect (sink->caps_negotiated, filter);
 
-  GST_INFO_OBJECT (sink, "Caps negotiated: %" GST_PTR_FORMAT,
-      sink->caps_negotiated);
+  GST_INFO_OBJECT (sink, "Caps negotiated: %" GST_PTR_FORMAT, resulting_caps);
 
-  if (!sink->caps_negotiated || gst_caps_is_empty (sink->caps_negotiated)) {
+  if (!resulting_caps || gst_caps_is_empty (resulting_caps)) {
     GST_ERROR_OBJECT (sink,
         "Failed to obtain an intersection between upstream elements and listeners");
     goto nointersection;
   }
 
-  return gst_caps_ref (sink->caps_negotiated);
+  return resulting_caps;
 
 nolisteners:
   {
@@ -747,9 +747,9 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     has_listeners = 0 != g_hash_table_size (listeners);
 
     if (!sink->caps_negotiated && !has_listeners
-	&& !gst_caps_is_equal (srccaps, sinkcaps)) {
+        && !gst_caps_is_equal (srccaps, sinkcaps)) {
 
-	if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
+      if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
               gst_event_new_reconfigure ()))
         goto reconfigure_event_error;
 
