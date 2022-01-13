@@ -70,6 +70,8 @@ static GstFlowReturn gst_inter_pipe_sink_new_buffer (GstAppSink * sink,
 static GstFlowReturn gst_inter_pipe_sink_new_preroll (GstAppSink * asink,
     gpointer data);
 static void gst_inter_pipe_sink_eos (GstAppSink * sink, gpointer data);
+static gboolean gst_inter_pipe_sink_new_event (GstAppSink * sink,
+    gpointer data);
 static gboolean gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     GstInterPipeIListener * listener);
 static gboolean gst_inter_pipe_sink_remove_listener (GstInterPipeINode * iface,
@@ -213,6 +215,7 @@ gst_inter_pipe_sink_init (GstInterPipeSink * sink)
   callbacks.eos = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_eos);
   callbacks.new_sample = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_buffer);
   callbacks.new_preroll = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_preroll);
+  callbacks.new_event = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_event);
   gst_app_sink_set_callbacks (GST_APP_SINK (sink), &callbacks, NULL, NULL);
 
   /*AppSink configuration */
@@ -705,6 +708,13 @@ gst_inter_pipe_sink_eos (GstAppSink * asink, gpointer data)
   g_mutex_unlock (&sink->listeners_mutex);
 }
 
+static gboolean
+gst_inter_pipe_sink_new_event (GstAppSink * sink, gpointer data)
+{
+  return TRUE;
+}
+
+
 /* GstInterPipeINode interface implementation */
 static void
 gst_inter_pipe_inode_init (GstInterPipeINodeInterface * iface)
@@ -747,9 +757,9 @@ gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     has_listeners = 0 != g_hash_table_size (listeners);
 
     if (!sink->caps_negotiated && !has_listeners
-	&& !gst_caps_is_equal (srccaps, sinkcaps)) {
+        && !gst_caps_is_equal (srccaps, sinkcaps)) {
 
-	if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
+      if (!gst_pad_push_event (GST_INTER_PIPE_SINK_PAD (sink),
               gst_event_new_reconfigure ()))
         goto reconfigure_event_error;
 
