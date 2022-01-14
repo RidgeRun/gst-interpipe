@@ -209,6 +209,9 @@ gst_inter_pipe_sink_init (GstInterPipeSink * sink)
 
   g_mutex_init (&sink->listeners_mutex);
 
+  /* Set the struct buffer to 0's so if in the future more callbacks are added
+   * does not cause a segmentation fault down the line
+   */
   memset (&callbacks, 0, sizeof (callbacks));
 
   /* AppSink callbacks */
@@ -222,7 +225,7 @@ gst_inter_pipe_sink_init (GstInterPipeSink * sink)
   gst_base_sink_set_sync (GST_BASE_SINK (sink), FALSE);
   gst_app_sink_set_max_buffers (GST_APP_SINK (sink), 3);
 
-  /* When a change in the interpipesink name happens, the callback function 
+  /* When a change in the interpipesink name happens, the callback function
      will update the node name and the nodes list */
   g_object_notify (G_OBJECT (sink), "name");
 
