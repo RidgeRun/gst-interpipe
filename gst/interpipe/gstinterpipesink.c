@@ -70,10 +70,6 @@ static GstFlowReturn gst_inter_pipe_sink_new_buffer (GstAppSink * sink,
 static GstFlowReturn gst_inter_pipe_sink_new_preroll (GstAppSink * asink,
     gpointer data);
 static void gst_inter_pipe_sink_eos (GstAppSink * sink, gpointer data);
-#if GST_VERSION_MINOR >= 19
-static gboolean gst_inter_pipe_sink_new_event (GstAppSink * sink,
-    gpointer data);
-#endif
 static gboolean gst_inter_pipe_sink_add_listener (GstInterPipeINode * iface,
     GstInterPipeIListener * listener);
 static gboolean gst_inter_pipe_sink_remove_listener (GstInterPipeINode * iface,
@@ -213,12 +209,14 @@ gst_inter_pipe_sink_init (GstInterPipeSink * sink)
 
   g_mutex_init (&sink->listeners_mutex);
 
+  memset (&callbacks, 0, sizeof (callbacks));
+
   /* AppSink callbacks */
   callbacks.eos = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_eos);
   callbacks.new_sample = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_buffer);
   callbacks.new_preroll = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_preroll);
 #if GST_VERSION_MINOR >= 19
-  callbacks.new_event = GST_DEBUG_FUNCPTR (gst_inter_pipe_sink_new_event);
+  callbacks.new_event = NULL;
 #endif
   gst_app_sink_set_callbacks (GST_APP_SINK (sink), &callbacks, NULL, NULL);
 
@@ -711,14 +709,6 @@ gst_inter_pipe_sink_eos (GstAppSink * asink, gpointer data)
   }
   g_mutex_unlock (&sink->listeners_mutex);
 }
-
-#if GST_VERSION_MINOR >= 19
-static gboolean
-gst_inter_pipe_sink_new_event (GstAppSink * sink, gpointer data)
-{
-  return TRUE;
-}
-#endif
 
 /* GstInterPipeINode interface implementation */
 static void
