@@ -18,7 +18,7 @@ Wiki](http://developer.ridgerun.com/wiki/index.php?title=GstInterpipe)
 The API reference is uploaded to [GitHub's project
 page](http://ridgerun.github.io/gst-interpipe/).
 
-GstInterpipe copyright (C) 2022 RidgeRun LLC
+GstInterpipe copyright (C) 2016-2022 RidgeRun LLC
 
 This GStreamer plug-in is free software; you can redistribute it
 and/or modify it under the terms of the GNU Lesser General Public
