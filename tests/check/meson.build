@@ -22,11 +22,16 @@ test_defines = [
 ]
 
 # Define test dependencies
+gst_check_dep = dependency('gstreamer-check-1.0', version : '>=1.0.5')
 test_deps=[gst_app_dep, gst_check_dep, interpipes_dep]
 
 # Define plugins path
 gst_dep = dependency('gstreamer-1.0')
-plugins_dir = gst_dep.get_pkgconfig_variable('pluginsdir')
+if gst_dep.type_name() == 'pkgconfig'
+  plugins_dir = gst_dep.get_pkgconfig_variable('pluginsdir')
+else
+  plugins_dir = get_option('libdir') / 'gstreamer-1.0'
+endif
 
 # Build and run tests
 foreach t : core_tests
