@@ -679,9 +679,19 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
         "Calculated Buffer Timestamp (PTS): %" GST_TIME_FORMAT,
         GST_TIME_ARGS (GST_BUFFER_PTS (buffer)));
   } else if (GST_INTER_PIPE_SRC_RESTART_TIMESTAMP == src->stream_sync) {
-    /* Remove the incoming timestamp to be generated according this basetime */
-    GST_BUFFER_PTS (buffer) = GST_CLOCK_TIME_NONE;
-    GST_BUFFER_DTS (buffer) = GST_CLOCK_TIME_NONE;
+    if (GST_STATE (src) == GST_STATE_PLAYING) {
+      /* Remove the incoming timestamp to be generated according this basetime */
+      GST_BUFFER_PTS (buffer) = GST_CLOCK_TIME_NONE;
+      GST_BUFFER_DTS (buffer) = GST_CLOCK_TIME_NONE;
+    } else {
+      /*
+       * appsrc requires srcbasetime to re-timestamp buffers, and srcbasetime
+       * is only valid when PLAYING.
+       */
+      GST_LOG_OBJECT (src, "Not PLAYING state yet");
+      gst_buffer_unref (buffer);
+      goto nosync;
+    }
   }
 
   ret = gst_app_src_push_buffer (appsrc, buffer);
