@@ -444,7 +444,7 @@ gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
   src = GST_INTER_PIPE_SRC (base);
   node = gst_inter_pipe_get_node (src->listen_to);
 
-  if (GST_EVENT_IS_UPSTREAM (event)) {
+  if (GST_EVENT_IS_UPSTREAM (event) && GST_EVENT_TYPE (event) != GST_EVENT_QOS) {       // skip forwarding of QOS events
 
     GST_INFO_OBJECT (src, "Incoming upstream event %s",
         GST_EVENT_TYPE_NAME (event));
@@ -725,22 +725,18 @@ gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
 
     ret = gst_pad_push_event (srcpad, event);
   } else {
-
-    event = gst_event_make_writable (event);
     srcbasetime = gst_element_get_base_time (GST_ELEMENT (appsrc));
+    if (GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT) {
+      GstSegment segment;
 
-    if (srcbasetime > basetime) {
-      GST_EVENT_TIMESTAMP (event) =
-          GST_EVENT_TIMESTAMP (event) - (srcbasetime - basetime);
-    } else {
-      GST_EVENT_TIMESTAMP (event) =
-          GST_EVENT_TIMESTAMP (event) + (basetime - srcbasetime);
+      /* copy segment values */
+      gst_event_copy_segment (event, &segment);
+      gst_event_unref (event);
+
+      gst_segment_offset_running_time (&segment, segment.format,
+          srcbasetime - basetime);
+      event = gst_event_new_segment (&segment);
     }
-
-    GST_DEBUG_OBJECT (src,
-        "Event %s with calculated timestamp %" GST_TIME_FORMAT
-        " enqueued on serial pending events", GST_EVENT_TYPE_NAME (event),
-        GST_TIME_ARGS (GST_EVENT_TIMESTAMP (event)));
 
     g_queue_push_tail (src->pending_serial_events, event);
   }
