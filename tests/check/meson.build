@@ -21,6 +21,7 @@ test_defines = [
   '-DTESTFILE="' + meson.current_source_dir() + '/meson.build"',
 ]
 
+gst_check_dep = dependency('gstreamer-check-1.0', version : '>=1.0.5')
 # Define test dependencies
 test_deps=[gst_app_dep, gst_check_dep, interpipes_dep]
 
