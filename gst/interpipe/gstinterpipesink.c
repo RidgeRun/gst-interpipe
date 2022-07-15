@@ -164,7 +164,7 @@ gst_inter_pipe_sink_class_init (GstInterPipeSinkClass * klass)
   g_object_class_install_property (gobject_class, PROP_FORWARD_EVENTS,
       g_param_spec_boolean ("forward-events", "Forward events",
           "Forward downstream events to all the listeners (except for EOS)",
-          TRUE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+          FALSE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_NUM_LISTENERS,
       g_param_spec_uint ("num-listeners", "Number of listeners",
