@@ -1,0 +1,13 @@
+Source: gst-interpipe
+Maintainer: nvidia <>
+Section: libs
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9),libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,pkg-config,gstreamer1.0-tools,gstreamer1.0-plugins-base
+
+Package: gst-interpipe
+Section: libs
+Architecture: any
+Priority: optional
+Depends: ${shlibs:Depends},${misc:Depends}
+Description: Interpipeline synchronization for GStreamer
