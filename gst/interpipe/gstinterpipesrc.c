@@ -683,6 +683,11 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
         "Calculated Buffer Timestamp (PTS): %" GST_TIME_FORMAT,
         GST_TIME_ARGS (GST_BUFFER_PTS (buffer)));
   } else if (GST_INTER_PIPE_SRC_RESTART_TIMESTAMP == src->stream_sync) {
+    parentbuffer = gst_buffer_ref (buffer);
+    buffer = gst_buffer_make_writable (buffer);
+    gst_buffer_add_parent_buffer_meta (buffer, parentbuffer);
+    gst_buffer_unref (parentbuffer);
+
     /* Remove the incoming timestamp to be generated according this basetime */
     GST_BUFFER_PTS (buffer) = GST_CLOCK_TIME_NONE;
     GST_BUFFER_DTS (buffer) = GST_CLOCK_TIME_NONE;
