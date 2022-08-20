@@ -1,6 +1,6 @@
 Source: libgstinterpipe
 Priority: optional
-Maintainer: Ridgerun Engineering <support@ridgerun.com>
+Maintainer: RidgeRun Engineering <support@ridgerun.com>
 Build-Depends: debhelper (>= 10),
   autotools-dev,
   gstreamer1.0-x,
@@ -13,11 +13,9 @@ Homepage: https://www.ridgerun.com/gstinterpipes
 Package: libgstinterpipe
 Architecture: any
 Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends},
-  gstreamer1.0-x,
-  libgstreamer1.0-dev,
-  libgstreamer-plugins-base1.0-dev
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
 Description:GstInterpipes GStreamer Pipeline Plugin
   GstInterpipe is a GStreamer plug-in that allows communication between
   two or more independent GStreamer pipelines. 
