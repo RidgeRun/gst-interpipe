@@ -1,13 +1,12 @@
 #!/usr/bin/make -f
-export PYTHONIOENCODING="utf-8"
-export DEB_BUILD_OPTIONS=nocheck
+export DEB_BUILD_OPTIONS := nocheck
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DH_VERBOSE = 1
 
 %:
-	dh $@ --with autoreconf
+	dh $@ --buildsystem=meson
 
 override_dh_autoreconf:
-	dh_autoreconf --as-needed
 
 override_dh_auto_test:
 	dh_auto_test --no-parallel
