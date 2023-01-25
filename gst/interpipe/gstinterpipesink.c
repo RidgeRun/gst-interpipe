@@ -451,6 +451,7 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
   if (!sink->caps_negotiated || gst_caps_is_empty (sink->caps_negotiated)) {
     GST_ERROR_OBJECT (sink,
         "Failed to obtain an intersection between upstream elements and listeners");
+    GST_ELEMENT_ERROR(sink, STREAM, FAILED, (NULL), ("Caps intersection error"));
     goto nointersection;
   }
 
