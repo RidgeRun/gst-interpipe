@@ -628,6 +628,7 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
   GstAppSrc *appsrc;
   GstFlowReturn ret;
   guint64 srcbasetime;
+  GstBuffer *parentbuffer;
 
   src = GST_INTER_PIPE_SRC (iface);
   appsrc = GST_APP_SRC (src);
@@ -642,7 +643,10 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
   if (GST_INTER_PIPE_SRC_COMPENSATE_TIMESTAMP == src->stream_sync) {
     guint64 difftime;
 
+    parentbuffer = gst_buffer_ref (buffer);
     buffer = gst_buffer_make_writable (buffer);
+    gst_buffer_add_parent_buffer_meta (buffer, parentbuffer);
+    gst_buffer_unref (parentbuffer);
 
     srcbasetime = gst_element_get_base_time (GST_ELEMENT (appsrc));
 
@@ -679,6 +683,11 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
         "Calculated Buffer Timestamp (PTS): %" GST_TIME_FORMAT,
         GST_TIME_ARGS (GST_BUFFER_PTS (buffer)));
   } else if (GST_INTER_PIPE_SRC_RESTART_TIMESTAMP == src->stream_sync) {
+    parentbuffer = gst_buffer_ref (buffer);
+    buffer = gst_buffer_make_writable (buffer);
+    gst_buffer_add_parent_buffer_meta (buffer, parentbuffer);
+    gst_buffer_unref (parentbuffer);
+
     /* Remove the incoming timestamp to be generated according this basetime */
     GST_BUFFER_PTS (buffer) = GST_CLOCK_TIME_NONE;
     GST_BUFFER_DTS (buffer) = GST_CLOCK_TIME_NONE;
