@@ -150,7 +150,7 @@ gst_inter_pipe_ilistener_send_eos (GstInterPipeIListener * self)
   g_return_val_if_fail (GST_INTER_PIPE_IS_ILISTENER (self), FALSE);
 
   iface = GST_INTER_PIPE_ILISTENER_GET_IFACE (self);
-  g_return_val_if_fail (iface->push_event != NULL, FALSE);
+  g_return_val_if_fail (iface->send_eos != NULL, FALSE);
 
   return iface->send_eos (self);
 }
