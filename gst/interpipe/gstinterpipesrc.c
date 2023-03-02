@@ -448,7 +448,7 @@ gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
         GST_EVENT_TYPE_NAME (event));
 
     if (node) {
-      gst_inter_pipe_inode_receive_event (node, gst_event_ref (event));
+      gst_inter_pipe_inode_receive_event (node, GST_INTER_PIPE_ILISTENER (src), gst_event_ref (event));
     } else
       GST_WARNING_OBJECT (src, "Node doesn't exist, event won't be forwarded");
   }
