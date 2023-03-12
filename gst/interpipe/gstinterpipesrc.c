@@ -417,10 +417,12 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
   GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
   GstInterPipeIListener *listener;
+  GstAppSrc *appsrc;
 
   basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
   listener = GST_INTER_PIPE_ILISTENER (src);
+  appsrc = GST_APP_SRC (src);
 
   if (src->listening) {
     GST_INFO_OBJECT (src, "Removing listener from node %s", src->listen_to);
@@ -429,6 +431,9 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
     g_free (src->listen_to);
     src->listen_to = NULL;
   }
+
+  GST_INFO_OBJECT (src, "Cleaning appsrc caps");
+  gst_app_src_set_caps (appsrc, NULL);
 
   return basesrc_class->stop (base);
 }
