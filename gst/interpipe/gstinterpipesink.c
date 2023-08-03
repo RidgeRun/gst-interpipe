@@ -451,6 +451,10 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
           "Failed to obtain an intersection between upstream elements and listeners");
       goto nointersection;
     }
+    if (gst_caps_is_any (sink->caps_negotiated)) {
+      gst_caps_unref (sink->caps_negotiated);
+      sink->caps_negotiated = gst_caps_copy (filter);
+    }
   }
 
   return gst_caps_ref (sink->caps_negotiated);
