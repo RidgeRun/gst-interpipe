@@ -658,7 +658,9 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
         difftime = srcbasetime - basetime;
         if (GST_BUFFER_PTS (buffer) >= difftime) {
           GST_BUFFER_PTS (buffer) = GST_BUFFER_PTS (buffer) - difftime;
-          GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) - difftime;
+          if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE ) {
+            GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) - difftime;
+          }
         } else {
           gst_buffer_unref (buffer);
           goto nosync;
@@ -666,7 +668,9 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
       } else {
         difftime = basetime - srcbasetime;
         GST_BUFFER_PTS (buffer) = GST_BUFFER_PTS (buffer) + difftime;
-        GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) + difftime;
+        if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE ) {
+          GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) + difftime;
+        }
       }
     } else {
       /* srcbasetime is only valid when PLAYING, no adjustment can be done */
