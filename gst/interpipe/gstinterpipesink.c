@@ -413,6 +413,7 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
   GstInterPipeIListener *listener;
   GHashTable *listeners;
   GstCaps *pre_filter;
+  GstCaps *intercept_caps;
   GList *listeners_list = NULL;
   GList *l = NULL;
 
@@ -439,22 +440,24 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
     goto nointersection;
   }
 
-  /* Take into account upsream caps suggestion */
-  pre_filter = sink->caps_negotiated;
-  sink->caps_negotiated =
-      gst_inter_pipe_sink_caps_intersect (pre_filter, filter);
-  gst_caps_unref (pre_filter);
-
   GST_INFO_OBJECT (sink, "Caps negotiated: %" GST_PTR_FORMAT,
       sink->caps_negotiated);
 
-  if (!sink->caps_negotiated || gst_caps_is_empty (sink->caps_negotiated)) {
+  /* Take into account upsream caps suggestion */
+  pre_filter = sink->caps_negotiated;
+  intercept_caps =
+      gst_inter_pipe_sink_caps_intersect (pre_filter, filter);
+
+  GST_INFO_OBJECT (sink, "Filtered caps: %" GST_PTR_FORMAT,
+      intercept_caps);
+
+  if (!intercept_caps || gst_caps_is_empty (intercept_caps)) {
     GST_ERROR_OBJECT (sink,
         "Failed to obtain an intersection between upstream elements and listeners");
     goto nointersection;
   }
 
-  return gst_caps_ref (sink->caps_negotiated);
+  return intercept_caps;
 
 nolisteners:
   {
