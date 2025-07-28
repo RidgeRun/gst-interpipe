@@ -332,8 +332,7 @@ gst_inter_pipe_sink_update_listener_caps (gpointer key, gpointer data,
   GST_LOG_OBJECT (appsink, "Setting caps %" GST_PTR_FORMAT " to %s",
       caps, listener_name);
 
-  gst_inter_pipe_ilistener_set_caps (listener,
-      GST_INTER_PIPE_SINK (appsink)->caps);
+  gst_inter_pipe_ilistener_set_caps (listener, caps);
 }
 
 
@@ -501,12 +500,10 @@ gst_inter_pipe_sink_set_caps (GstBaseSink * base, GstCaps * caps)
   GST_INFO_OBJECT (sink, "Negotiated Caps: %" GST_PTR_FORMAT,
       sink->caps_negotiated);
 
-  gst_caps_replace (&sink->caps, caps);
-  gst_app_sink_set_caps (GST_APP_SINK (sink), caps);
-
   /* No one is listening to me I can accept caps */
-  if (0 == g_hash_table_size (listeners))
-    return TRUE;
+  if (0 == g_hash_table_size (listeners)) {
+    goto out;
+  }
 
   g_mutex_lock (&sink->listeners_mutex);
   if (sink->caps_negotiated
@@ -527,8 +524,14 @@ gst_inter_pipe_sink_set_caps (GstBaseSink * base, GstCaps * caps)
   }
 
   g_mutex_unlock (&sink->listeners_mutex);
-  return ret;
 
+ out:
+  if (ret) {
+    gst_caps_replace (&sink->caps, caps);
+    gst_app_sink_set_caps (GST_APP_SINK (sink), caps);
+  }
+
+  return ret;
 }
 
 static void
