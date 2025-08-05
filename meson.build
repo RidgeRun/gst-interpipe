@@ -1,5 +1,5 @@
 project('gst-interpipes', 'c',
-  version : '1.1.9',
+  version : '1.1.10',
   meson_version : '>= 0.50',)
 
 gst_interpipes_version = meson.project_version()
