@@ -332,8 +332,7 @@ gst_inter_pipe_sink_update_listener_caps (gpointer key, gpointer data,
   GST_LOG_OBJECT (appsink, "Setting caps %" GST_PTR_FORMAT " to %s",
       caps, listener_name);
 
-  gst_inter_pipe_ilistener_set_caps (listener,
-      GST_INTER_PIPE_SINK (appsink)->caps);
+  gst_inter_pipe_ilistener_set_caps (listener, caps);
 }
 
 
@@ -413,6 +412,7 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
   GstInterPipeIListener *listener;
   GHashTable *listeners;
   GstCaps *pre_filter;
+  GstCaps *intercept_caps;
   GList *listeners_list = NULL;
   GList *l = NULL;
 
@@ -439,22 +439,24 @@ gst_inter_pipe_sink_get_caps (GstBaseSink * base, GstCaps * filter)
     goto nointersection;
   }
 
-  /* Take into account upsream caps suggestion */
-  pre_filter = sink->caps_negotiated;
-  sink->caps_negotiated =
-      gst_inter_pipe_sink_caps_intersect (pre_filter, filter);
-  gst_caps_unref (pre_filter);
-
   GST_INFO_OBJECT (sink, "Caps negotiated: %" GST_PTR_FORMAT,
       sink->caps_negotiated);
 
-  if (!sink->caps_negotiated || gst_caps_is_empty (sink->caps_negotiated)) {
+  /* Take into account upsream caps suggestion */
+  pre_filter = sink->caps_negotiated;
+  intercept_caps =
+      gst_inter_pipe_sink_caps_intersect (pre_filter, filter);
+
+  GST_INFO_OBJECT (sink, "Filtered caps: %" GST_PTR_FORMAT,
+      intercept_caps);
+
+  if (!intercept_caps || gst_caps_is_empty (intercept_caps)) {
     GST_ERROR_OBJECT (sink,
         "Failed to obtain an intersection between upstream elements and listeners");
     goto nointersection;
   }
 
-  return gst_caps_ref (sink->caps_negotiated);
+  return intercept_caps;
 
 nolisteners:
   {
@@ -498,12 +500,10 @@ gst_inter_pipe_sink_set_caps (GstBaseSink * base, GstCaps * caps)
   GST_INFO_OBJECT (sink, "Negotiated Caps: %" GST_PTR_FORMAT,
       sink->caps_negotiated);
 
-  gst_caps_replace (&sink->caps, caps);
-  gst_app_sink_set_caps (GST_APP_SINK (sink), caps);
-
   /* No one is listening to me I can accept caps */
-  if (0 == g_hash_table_size (listeners))
-    return TRUE;
+  if (0 == g_hash_table_size (listeners)) {
+    goto out;
+  }
 
   g_mutex_lock (&sink->listeners_mutex);
   if (sink->caps_negotiated
@@ -524,8 +524,14 @@ gst_inter_pipe_sink_set_caps (GstBaseSink * base, GstCaps * caps)
   }
 
   g_mutex_unlock (&sink->listeners_mutex);
-  return ret;
 
+ out:
+  if (ret) {
+    gst_caps_replace (&sink->caps, caps);
+    gst_app_sink_set_caps (GST_APP_SINK (sink), caps);
+  }
+
+  return ret;
 }
 
 static void
