@@ -416,11 +416,19 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
 {
   GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
+  GstAppSrc *appsrc;
   GstInterPipeIListener *listener;
+  gboolean blocking;
 
   basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
   src = GST_INTER_PIPE_SRC (base);
+  appsrc = GST_APP_SRC (src);
   listener = GST_INTER_PIPE_ILISTENER (src);
+
+  g_object_get(G_OBJECT(appsrc), "block", &blocking, NULL);
+  if (blocking) {
+    gst_app_src_end_of_stream(GST_APP_SRC(appsrc));
+  }
 
   if (src->listening) {
     GST_INFO_OBJECT (src, "Removing listener from node %s", src->listen_to);
