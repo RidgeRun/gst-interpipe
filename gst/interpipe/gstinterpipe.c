@@ -48,7 +48,7 @@ struct _GstInterPipeListenerPriv
 };
 
 /* Global mutexes for singletons */
-static GMutex listeners_mutex;
+static GRecMutex listeners_mutex;
 static GMutex nodes_mutex;
 
 static GHashTable *gst_inter_pipe_get_listeners ();
@@ -115,7 +115,7 @@ gst_inter_pipe_listen_node (GstInterPipeIListener * listener,
   g_return_val_if_fail (listener != NULL, FALSE);
   g_return_val_if_fail (node_name != NULL, FALSE);
 
-  g_mutex_lock (&listeners_mutex);
+  g_rec_mutex_lock (&listeners_mutex);
 
   listeners = gst_inter_pipe_get_listeners ();
   listener_name = gst_inter_pipe_ilistener_get_name (listener);
@@ -155,20 +155,20 @@ gst_inter_pipe_listen_node (GstInterPipeIListener * listener,
   g_hash_table_insert (listeners, (gchar *) listener_name,
       (gpointer) listener_priv);
 
-  g_mutex_unlock (&listeners_mutex);
+  g_rec_mutex_unlock (&listeners_mutex);
 
   return TRUE;
 already_listen:
   {
     GST_INFO ("Already listening to node %s", node_name);
-    g_mutex_unlock (&listeners_mutex);
+    g_rec_mutex_unlock (&listeners_mutex);
     return TRUE;
   }
 add_failed:
   {
     GST_WARNING ("Could not add listener %s to node %s", listener_name,
         node_name);
-    g_mutex_unlock (&listeners_mutex);
+    g_rec_mutex_unlock (&listeners_mutex);
     return FALSE;
   }
 }
@@ -254,7 +254,7 @@ gst_inter_pipe_leave_node (GstInterPipeIListener * listener)
 {
   gboolean ret = TRUE;
 
-  g_mutex_lock (&listeners_mutex);
+  g_rec_mutex_lock (&listeners_mutex);
 
   ret = gst_inter_pipe_leave_node_priv (listener);
   if (!ret)
@@ -264,13 +264,13 @@ gst_inter_pipe_leave_node (GstInterPipeIListener * listener)
     goto list_error;
 
 out:
-  g_mutex_unlock (&listeners_mutex);
+  g_rec_mutex_unlock (&listeners_mutex);
   return ret;
 
 list_error:
   {
     GST_WARNING ("Could not leave node");
-    g_mutex_unlock (&listeners_mutex);
+    g_rec_mutex_unlock (&listeners_mutex);
     return FALSE;
   }
 }
@@ -310,11 +310,11 @@ gst_inter_pipe_add_node (GstInterPipeINode * node, const gchar * node_name)
 
   g_mutex_unlock (&nodes_mutex);
 
+  g_rec_mutex_lock (&listeners_mutex);
   listeners = gst_inter_pipe_get_listeners ();
   g_hash_table_foreach (listeners, gst_inter_pipe_notify_node_added,
       (gpointer) node_name);
-
-
+  g_rec_mutex_unlock (&listeners_mutex);
 
   return TRUE;
 
@@ -365,9 +365,11 @@ gst_inter_pipe_remove_node (GstInterPipeINode * node, const gchar * node_name)
   }
   g_mutex_unlock (&nodes_mutex);
 
+  g_rec_mutex_lock (&listeners_mutex);
   listeners = gst_inter_pipe_get_listeners ();
   g_hash_table_foreach (listeners, gst_inter_pipe_notify_node_removed,
       (gpointer) node_name);
+  g_rec_mutex_unlock (&listeners_mutex);
 
   return TRUE;
 }
