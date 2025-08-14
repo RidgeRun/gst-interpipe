@@ -755,6 +755,7 @@ no_events:
     GST_DEBUG_OBJECT (src,
         "The interpipesrc is not currently processing the incoming events "
         "because the accept incoming events property is set to FALSE");
+    gst_event_unref (event);
     return TRUE;
   }
 }
