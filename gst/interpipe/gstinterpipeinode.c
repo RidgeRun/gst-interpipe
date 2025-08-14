@@ -68,14 +68,15 @@ gst_inter_pipe_inode_remove_listener (GstInterPipeINode * self,
 }
 
 gboolean
-gst_inter_pipe_inode_receive_event (GstInterPipeINode * self, GstEvent * event)
+gst_inter_pipe_inode_receive_event (GstInterPipeINode * self, GstInterPipeIListener * listener, GstEvent * event)
 {
   GstInterPipeINodeInterface *iface;
 
   g_return_val_if_fail (GST_INTER_PIPE_IS_INODE (self), FALSE);
+  g_return_val_if_fail (listener != NULL, FALSE);
 
   iface = GST_INTER_PIPE_INODE_GET_IFACE (self);
   g_return_val_if_fail (iface->receive_event != NULL, FALSE);
 
-  return iface->receive_event (self, event);
+  return iface->receive_event (self, listener, event);
 }
