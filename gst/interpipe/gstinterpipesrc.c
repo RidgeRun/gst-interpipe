@@ -197,25 +197,25 @@ gst_inter_pipe_src_class_init (GstInterPipeSrcClass * klass)
   g_object_class_install_property (gobject_class, PROP_BLOCK_SWITCH,
       g_param_spec_boolean ("block-switch", "Block Switch",
           "Disable the ability to swich between nodes.",
-          FALSE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+          FALSE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_ALLOW_RENEGOTIATION,
       g_param_spec_boolean ("allow-renegotiation", "Allow Renegotiation",
           "Allow the caps renegotiation with an interpipesink with different "
           "caps only if the allow-renegotiation property is set to true",
-          TRUE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+          TRUE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_STREAM_SYNC,
       g_param_spec_enum ("stream-sync", "Stream Synchronization",
           "Define buffer synchronization between the different pipelines",
           GST_TYPE_INTER_PIPE_SRC_STREAM_SYNC,
           GST_INTER_PIPE_SRC_PASSTHROUGH_TIMESTAMP,
-          G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_ACCEPT_EVENTS,
       g_param_spec_boolean ("accept-events", "Accept Events",
           "Accept the events received from the interpipesink",
-          TRUE, G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
+          TRUE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_ACCEPT_EOS_EVENT,
       g_param_spec_boolean ("accept-eos-event", "Accept EOS Events",
