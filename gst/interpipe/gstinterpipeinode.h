@@ -65,6 +65,7 @@ struct _GstInterPipeINodeInterface
   gboolean (* add_listener) (GstInterPipeINode *iface, GstInterPipeIListener * listener);
   gboolean (* remove_listener) (GstInterPipeINode *iface, GstInterPipeIListener * listener);
   gboolean (* receive_event) (GstInterPipeINode *iface, GstEvent *event);
+  gboolean (* query) (GstInterPipeINode *iface, GstQuery *query);
 };
 
 /**
@@ -105,6 +106,8 @@ gboolean gst_inter_pipe_inode_remove_listener (GstInterPipeINode *iface, GstInte
 gboolean gst_inter_pipe_inode_receive_event (GstInterPipeINode *iface, GstEvent *event);
 
 GType gst_inter_pipe_inode_get_type (void);
+
+gboolean gst_inter_pipe_inode_send_query (GstInterPipeINode *iface, GstQuery *query);
 
 G_END_DECLS
 

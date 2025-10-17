@@ -143,6 +143,21 @@ gst_inter_pipe_ilistener_push_event (GstInterPipeIListener * self,
 }
 
 gboolean
+gst_inter_pipe_ilistener_query (GstInterPipeIListener * self, GstQuery * query)
+{
+  GstInterPipeIListenerInterface *iface;
+
+  g_return_val_if_fail (GST_INTER_PIPE_IS_ILISTENER (self), FALSE);
+  g_return_val_if_fail (query, FALSE);
+
+  iface = GST_INTER_PIPE_ILISTENER_GET_IFACE (self);
+  g_return_val_if_fail (iface->query != NULL, FALSE);
+
+  return iface->query (self, query);
+}
+
+
+gboolean
 gst_inter_pipe_ilistener_send_eos (GstInterPipeIListener * self)
 {
   GstInterPipeIListenerInterface *iface;

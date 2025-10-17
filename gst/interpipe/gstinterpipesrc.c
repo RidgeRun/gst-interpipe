@@ -45,6 +45,9 @@
 #include <gst/gst.h>
 #include "gstinterpipe.h"
 #include "gstinterpipesrc.h"
+
+#include <gst/base/gstbasesink.h>
+
 #include "gstinterpipeilistener.h"
 
 GST_DEBUG_CATEGORY_STATIC (gst_inter_pipe_src_debug);
@@ -87,11 +90,14 @@ static gboolean gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
 static gboolean gst_inter_pipe_src_push_event (GstInterPipeIListener * iface,
     GstEvent * event, guint64 basetime);
 static gboolean gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface);
+static gboolean gst_inter_pipe_src_push_query (GstInterPipeIListener * iface,
+    GstQuery * query);
 static gboolean gst_inter_pipe_src_listen_node (GstInterPipeSrc * src,
     const gchar * node_name);
 static gboolean gst_inter_pipe_src_start (GstBaseSrc * base);
 static gboolean gst_inter_pipe_src_stop (GstBaseSrc * base);
 static gboolean gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event);
+static gboolean gst_inter_pipe_src_query (GstBaseSrc * base, GstQuery * query);
 static void gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface *
     iface);
 
@@ -154,6 +160,10 @@ struct _GstInterPipeSrc
 
   /* Accept end of stream event */
   gboolean accept_eos_event;
+
+  /* Pending context queries that couldn't be answered */
+  GQueue *pending_context_queries;
+  GMutex context_lock;
 };
 
 struct _GstInterPipeSrcClass
@@ -166,7 +176,7 @@ G_DEFINE_TYPE_WITH_CODE (GstInterPipeSrc, gst_inter_pipe_src, GST_TYPE_APP_SRC,
         gst_inter_pipe_ilistener_init));
 
 static void
-gst_inter_pipe_src_class_init (GstInterPipeSrcClass * klass)
+gst_inter_pipe_src_class_init (GstInterPipeSrcClass *klass)
 {
   GObjectClass *gobject_class;
   GstElementClass *element_class;
@@ -226,10 +236,11 @@ gst_inter_pipe_src_class_init (GstInterPipeSrcClass * klass)
   basesrc_class->stop = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_stop);
   basesrc_class->event = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_event);
   basesrc_class->create = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_create);
+  basesrc_class->query = GST_DEBUG_FUNCPTR (gst_inter_pipe_src_query);
 }
 
 static void
-gst_inter_pipe_src_init (GstInterPipeSrc * src)
+gst_inter_pipe_src_init (GstInterPipeSrc *src)
 {
   gst_app_src_set_emit_signals (GST_APP_SRC (src), FALSE);
 
@@ -242,11 +253,66 @@ gst_inter_pipe_src_init (GstInterPipeSrc * src)
   src->stream_sync = GST_INTER_PIPE_SRC_PASSTHROUGH_TIMESTAMP;
   src->accept_events = TRUE;
   src->accept_eos_event = TRUE;
+
+  g_mutex_init (&src->context_lock);
+  src->pending_context_queries = g_queue_new ();
 }
 
 static void
-gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
-    const GValue * value, GParamSpec * pspec)
+gst_inter_pipe_src_retry_pending_queries (GstInterPipeSrc *src)
+{
+  GstInterPipeINode *sink_node = gst_inter_pipe_get_node (src->listen_to);
+  GstQuery *query;
+  GstContext *context;
+
+  if (sink_node) {
+    g_mutex_lock (&src->context_lock);
+
+    while (!g_queue_is_empty (src->pending_context_queries)) {
+      query = g_queue_pop_head (src->pending_context_queries);
+
+      GST_DEBUG_OBJECT (src, "Retrying pending context query");
+
+      if (!gst_inter_pipe_inode_send_query (sink_node, query)) {
+        GST_DEBUG_OBJECT (src, "Pending query still cannot be answered");
+      } else {
+        GST_DEBUG_OBJECT (src,
+            "Pending query answered, we've got a new context from upstream!");
+        // TODO: this doesn't work, it's too late to set the context now
+        //       see for example: https://github.com/GStreamer/gstreamer/blob/2dd1b4bf270995fd4dd6aa240cb51cfcdf3c71b8/subprojects/gst-plugins-bad/sys/nvcodec/gstcudabasetransform.c#L179-L197
+        //       by the time we set this context filter->stream has already be assigned, so changing the context doesn't do anything..
+        gst_query_parse_context (query, &context);
+        if (context) {
+          GstElement *pipeline = GST_ELEMENT (gst_element_get_parent (src));
+          GstIterator *iter = gst_bin_iterate_elements (GST_BIN (pipeline));
+          GValue item = G_VALUE_INIT;
+          GstMessage *msg;
+
+          // Set the context on interpipesrc itself
+          gst_element_set_context (GST_ELEMENT (src), context);
+
+          GST_DEBUG_OBJECT (src, "Sending have context message");
+          msg = gst_message_new_have_context (GST_OBJECT (src), context);
+          gst_element_post_message (GST_ELEMENT (src), msg);
+
+          while (gst_iterator_next (iter, &item) == GST_ITERATOR_OK) {
+            GstElement *element = GST_ELEMENT (g_value_get_object (&item));
+            gst_element_set_context (element, context);
+          }
+
+        }
+      }
+
+      gst_query_unref (query);
+    }
+
+    g_mutex_unlock (&src->context_lock);
+  }
+}
+
+static void
+gst_inter_pipe_src_set_property (GObject *object, guint prop_id,
+    const GValue *value, GParamSpec *pspec)
 {
   GstInterPipeSrc *src;
   GstInterPipeIListener *listener;
@@ -275,6 +341,9 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
               g_free (src->listen_to);
             }
             src->listen_to = node_name;
+
+            /* Retry any pending context queries */
+            gst_inter_pipe_src_retry_pending_queries (src);
           }
           src->listening = TRUE;
           GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
@@ -321,8 +390,8 @@ gst_inter_pipe_src_set_property (GObject * object, guint prop_id,
 }
 
 static void
-gst_inter_pipe_src_get_property (GObject * object, guint prop_id,
-    GValue * value, GParamSpec * pspec)
+gst_inter_pipe_src_get_property (GObject *object, guint prop_id,
+    GValue *value, GParamSpec *pspec)
 {
   GstInterPipeSrc *src;
 
@@ -356,7 +425,7 @@ gst_inter_pipe_src_get_property (GObject * object, guint prop_id,
 }
 
 static void
-gst_inter_pipe_src_finalize (GObject * object)
+gst_inter_pipe_src_finalize (GObject *object)
 {
   GstInterPipeSrc *src;
 
@@ -365,6 +434,14 @@ gst_inter_pipe_src_finalize (GObject * object)
   /* Free pending serial events queue */
   g_queue_free_full (src->pending_serial_events,
       (GDestroyNotify) gst_event_unref);
+
+  /* Free pending context queries */
+  g_mutex_lock (&src->context_lock);
+  g_queue_free_full (src->pending_context_queries,
+      (GDestroyNotify) gst_query_unref);
+  g_mutex_unlock (&src->context_lock);
+
+  g_mutex_clear (&src->context_lock);
 
   if (src->listen_to) {
     g_free (src->listen_to);
@@ -377,7 +454,7 @@ gst_inter_pipe_src_finalize (GObject * object)
 
 /* GstBaseSrc Implementation*/
 static gboolean
-gst_inter_pipe_src_start (GstBaseSrc * base)
+gst_inter_pipe_src_start (GstBaseSrc *base)
 {
   GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
@@ -395,6 +472,10 @@ gst_inter_pipe_src_start (GstBaseSrc * base)
     } else {
       GST_INFO_OBJECT (src, "Listening to node %s", src->listen_to);
       src->listening = TRUE;
+
+      /* Retry pending queries */
+      gst_inter_pipe_src_retry_pending_queries (src);
+
       goto start_done;
     }
   } else {
@@ -412,7 +493,7 @@ start_fail:
 }
 
 static gboolean
-gst_inter_pipe_src_stop (GstBaseSrc * base)
+gst_inter_pipe_src_stop (GstBaseSrc *base)
 {
   GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
@@ -432,7 +513,7 @@ gst_inter_pipe_src_stop (GstBaseSrc * base)
 }
 
 static gboolean
-gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
+gst_inter_pipe_src_event (GstBaseSrc *base, GstEvent *event)
 {
   GstBaseSrcClass *basesrc_class;
   GstInterPipeSrc *src;
@@ -456,9 +537,48 @@ gst_inter_pipe_src_event (GstBaseSrc * base, GstEvent * event)
   return basesrc_class->event (base, event);
 }
 
+static gboolean
+gst_inter_pipe_src_query (GstBaseSrc *base, GstQuery *query)
+{
+  GstInterPipeINode *sink_node;
+  GstBaseSrcClass *basesrc_class;
+  GstInterPipeSrc *src;
+  gboolean ret;
+
+  basesrc_class = GST_BASE_SRC_CLASS (gst_inter_pipe_src_parent_class);
+  src = GST_INTER_PIPE_SRC (base);
+
+  GST_DEBUG_OBJECT (src, "Incoming upstream query %s",
+      GST_QUERY_TYPE_NAME (query));
+
+  if (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT) {
+    if (src->listening && src->listen_to) {
+      GST_DEBUG_OBJECT (src, "Context query will be forwarded to node %s",
+          src->listen_to);
+      sink_node = gst_inter_pipe_get_node (src->listen_to);
+      ret = gst_inter_pipe_inode_send_query (sink_node, query);
+
+      if (!ret) {
+        GST_DEBUG_OBJECT (src, "Context query could not be answered by node");
+      }
+
+      return ret;
+    } else {
+      GST_DEBUG_OBJECT (src, "Not connected yet, cannot answer context query");
+
+      /* Cache this query type for retry after connection */
+      g_mutex_lock (&src->context_lock);
+      g_queue_push_tail (src->pending_context_queries, gst_query_ref (query));
+      g_mutex_unlock (&src->context_lock);
+    }
+  }
+
+  return basesrc_class->query (base, query);
+}
+
 static GstFlowReturn
-gst_inter_pipe_src_create (GstBaseSrc * base, guint64 offset, guint size,
-    GstBuffer ** buf)
+gst_inter_pipe_src_create (GstBaseSrc *base, guint64 offset, guint size,
+    GstBuffer **buf)
 {
   GstInterPipeSrc *src;
   GstEvent *serial_event;
@@ -512,7 +632,7 @@ gst_inter_pipe_src_create (GstBaseSrc * base, guint64 offset, guint size,
 
 /* GstInterPipeIListener Implementation */
 static void
-gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface * iface)
+gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface *iface)
 {
   iface->get_name = gst_inter_pipe_src_get_name;
   iface->node_added = gst_inter_pipe_src_node_added;
@@ -521,18 +641,19 @@ gst_inter_pipe_ilistener_init (GstInterPipeIListenerInterface * iface)
   iface->set_caps = gst_inter_pipe_src_set_caps;
   iface->push_buffer = gst_inter_pipe_src_push_buffer;
   iface->push_event = gst_inter_pipe_src_push_event;
+  iface->query = gst_inter_pipe_src_push_query;
   iface->send_eos = gst_inter_pipe_src_send_eos;
 }
 
 static const gchar *
-gst_inter_pipe_src_get_name (GstInterPipeIListener * iface)
+gst_inter_pipe_src_get_name (GstInterPipeIListener *iface)
 {
   return GST_OBJECT_NAME (iface);
 }
 
 static gboolean
-gst_inter_pipe_src_node_added (GstInterPipeIListener * iface,
-    const gchar * node_name)
+gst_inter_pipe_src_node_added (GstInterPipeIListener *iface,
+    const gchar *node_name)
 {
   GstInterPipeSrc *src;
 
@@ -542,14 +663,17 @@ gst_inter_pipe_src_node_added (GstInterPipeIListener * iface,
 
   if (g_strcmp0 (src->listen_to, node_name) == 0) {
     gst_inter_pipe_src_listen_node (src, node_name);
+
+    /* Retry pending queries */
+    gst_inter_pipe_src_retry_pending_queries (src);
   }
 
   return TRUE;
 }
 
 static gboolean
-gst_inter_pipe_src_node_removed (GstInterPipeIListener * iface,
-    const gchar * node_name)
+gst_inter_pipe_src_node_removed (GstInterPipeIListener *iface,
+    const gchar *node_name)
 {
   GstInterPipeSrc *src;
 
@@ -564,8 +688,7 @@ gst_inter_pipe_src_node_removed (GstInterPipeIListener * iface,
 }
 
 static GstCaps *
-gst_inter_pipe_src_get_caps (GstInterPipeIListener * iface,
-    gboolean * negotiated)
+gst_inter_pipe_src_get_caps (GstInterPipeIListener *iface, gboolean *negotiated)
 {
   GstInterPipeSrc *src;
   GstAppSrc *appsrc;
@@ -590,8 +713,7 @@ out:
 }
 
 static gboolean
-gst_inter_pipe_src_set_caps (GstInterPipeIListener * iface,
-    const GstCaps * caps)
+gst_inter_pipe_src_set_caps (GstInterPipeIListener *iface, const GstCaps *caps)
 {
   GstInterPipeSrc *src;
   GstAppSrc *appsrc;
@@ -621,8 +743,8 @@ allow_renegotiation_disabled:
 }
 
 static gboolean
-gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
-    GstBuffer * buffer, guint64 basetime)
+gst_inter_pipe_src_push_buffer (GstInterPipeIListener *iface,
+    GstBuffer *buffer, guint64 basetime)
 {
   GstInterPipeSrc *src;
   GstAppSrc *appsrc;
@@ -658,7 +780,7 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
         difftime = srcbasetime - basetime;
         if (GST_BUFFER_PTS (buffer) >= difftime) {
           GST_BUFFER_PTS (buffer) = GST_BUFFER_PTS (buffer) - difftime;
-          if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE ) {
+          if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE) {
             GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) - difftime;
           }
         } else {
@@ -668,7 +790,7 @@ gst_inter_pipe_src_push_buffer (GstInterPipeIListener * iface,
       } else {
         difftime = basetime - srcbasetime;
         GST_BUFFER_PTS (buffer) = GST_BUFFER_PTS (buffer) + difftime;
-        if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE ) {
+        if (GST_BUFFER_DTS (buffer) != GST_CLOCK_TIME_NONE) {
           GST_BUFFER_DTS (buffer) = GST_BUFFER_DTS (buffer) + difftime;
         }
       }
@@ -704,7 +826,7 @@ nosync:
 }
 
 static gboolean
-gst_inter_pipe_src_push_event (GstInterPipeIListener * iface, GstEvent * event,
+gst_inter_pipe_src_push_event (GstInterPipeIListener *iface, GstEvent *event,
     guint64 basetime)
 {
   GstInterPipeSrc *src;
@@ -756,8 +878,9 @@ no_events:
   }
 }
 
+
 static gboolean
-gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface)
+gst_inter_pipe_src_send_eos (GstInterPipeIListener *iface)
 {
   GstInterPipeSrc *src;
   GstAppSrc *appsrc;
@@ -775,8 +898,35 @@ gst_inter_pipe_src_send_eos (GstInterPipeIListener * iface)
   return TRUE;
 }
 
+
 static gboolean
-gst_inter_pipe_src_listen_node (GstInterPipeSrc * src, const gchar * node_name)
+gst_inter_pipe_src_push_query (GstInterPipeIListener *iface, GstQuery *query)
+{
+  GstInterPipeSrc *src;
+  GstPad *srcpad;
+  GstPad *peerpad;
+  gboolean ret = TRUE;
+
+  src = GST_INTER_PIPE_SRC (iface);
+  srcpad = GST_INTER_PIPE_SRC_PAD (GST_APP_SRC (src));
+
+  peerpad = gst_pad_get_peer (srcpad);
+  if (!peerpad) {
+    ret = FALSE;
+    goto out;
+  }
+
+  ret = gst_pad_query (peerpad, query);
+
+  gst_object_unref (peerpad);
+
+out:
+  return ret;
+}
+
+
+static gboolean
+gst_inter_pipe_src_listen_node (GstInterPipeSrc *src, const gchar *node_name)
 {
   GstInterPipeIListener *listener;
 

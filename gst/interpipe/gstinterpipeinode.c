@@ -34,14 +34,14 @@
 G_DEFINE_INTERFACE (GstInterPipeINode, gst_inter_pipe_inode, G_TYPE_OBJECT);
 
 static void
-gst_inter_pipe_inode_default_init (GstInterPipeINodeInterface * iface)
+gst_inter_pipe_inode_default_init (GstInterPipeINodeInterface *iface)
 {
   //NOP
 }
 
 gboolean
-gst_inter_pipe_inode_add_listener (GstInterPipeINode * self,
-    GstInterPipeIListener * listener)
+gst_inter_pipe_inode_add_listener (GstInterPipeINode *self,
+    GstInterPipeIListener *listener)
 {
   GstInterPipeINodeInterface *iface;
 
@@ -54,8 +54,8 @@ gst_inter_pipe_inode_add_listener (GstInterPipeINode * self,
 }
 
 gboolean
-gst_inter_pipe_inode_remove_listener (GstInterPipeINode * self,
-    GstInterPipeIListener * listener)
+gst_inter_pipe_inode_remove_listener (GstInterPipeINode *self,
+    GstInterPipeIListener *listener)
 {
   GstInterPipeINodeInterface *iface;
 
@@ -68,7 +68,7 @@ gst_inter_pipe_inode_remove_listener (GstInterPipeINode * self,
 }
 
 gboolean
-gst_inter_pipe_inode_receive_event (GstInterPipeINode * self, GstEvent * event)
+gst_inter_pipe_inode_receive_event (GstInterPipeINode *self, GstEvent *event)
 {
   GstInterPipeINodeInterface *iface;
 
@@ -78,4 +78,15 @@ gst_inter_pipe_inode_receive_event (GstInterPipeINode * self, GstEvent * event)
   g_return_val_if_fail (iface->receive_event != NULL, FALSE);
 
   return iface->receive_event (self, event);
+}
+
+gboolean
+gst_inter_pipe_inode_send_query (GstInterPipeINode *self, GstQuery *query)
+{
+  g_return_val_if_fail (GST_INTER_PIPE_IS_INODE (self), FALSE);
+  g_return_val_if_fail (GST_IS_QUERY (query), FALSE);
+
+  GstInterPipeINodeInterface *iface = GST_INTER_PIPE_INODE_GET_IFACE (self);
+  g_return_val_if_fail (iface->query != NULL, FALSE);
+  return iface->query (self, query);
 }

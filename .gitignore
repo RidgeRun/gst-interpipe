@@ -76,3 +76,5 @@ docs/plugins/sgml.stamp
 docs/plugins/xml/
 docs/version.entities
 docs/plugins/inspect-registry.xml
+
+.idea/

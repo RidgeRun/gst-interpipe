@@ -94,6 +94,7 @@ struct _GstInterPipeIListenerInterface
   gboolean (* node_removed) (GstInterPipeIListener *iface, const gchar *node_removed);
   gboolean (* push_buffer) (GstInterPipeIListener *iface, GstBuffer *buffer, guint64 basetime);
   gboolean (* push_event) (GstInterPipeIListener *iface, GstEvent *event, guint64 basetime);
+  gboolean (* query) (GstInterPipeIListener *iface, GstQuery *query);
   gboolean (* send_eos) (GstInterPipeIListener *iface);
 };
 
@@ -192,6 +193,19 @@ gboolean gst_inter_pipe_ilistener_push_buffer (GstInterPipeIListener *iface,
  */
 gboolean gst_inter_pipe_ilistener_push_event (GstInterPipeIListener *iface,
 					      GstEvent *event, guint64 basetime);
+
+
+/**
+ * gst_inter_pipe_ilistener_query:
+ * @iface: (transfer none)(not nullable): The object that should query the #GstQuery downstream.
+ * @event: (transfer full)(not nullable): The #GstQuery to be pushed downstream.
+ *
+ * Ask @query to the downstream element. 
+ *
+ * Return: True if the query was successful, False otherwise.
+ */
+gboolean gst_inter_pipe_ilistener_query (GstInterPipeIListener *iface,
+					 GstQuery *query);
 
 /**
  * gst_inter_pipe_ilistener_send_eos:
